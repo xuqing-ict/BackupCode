@@ -1,0 +1,32 @@
+/**
+ * @file staticMemberFunc.cc
+ * @brief 
+ * @author Qing Xu, xuqinguestc@163.com
+ * @version 0.1.00
+ * @date 2014-09-06
+ */
+
+//call static member function 
+#include <bits/stdc++.h>
+using namespace std;
+
+class A
+{
+private:
+    static int val_s;
+public:
+    static int getVal(){cout << "call getVal in A..." << endl;return val_s;}
+};
+
+int A::val_s = 4;
+
+int main(void)
+{
+    cout << ((A *)0)->getVal() << endl;
+    A a;
+    cout << a.getVal() << endl;
+    cout << A::getVal() << endl;
+    printf("getVal address : %p\n",(void *)(&A::getVal));
+    cout << (void *)(A::getVal) << endl;
+    return 0;
+}

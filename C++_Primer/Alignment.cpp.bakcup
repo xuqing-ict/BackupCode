@@ -1,0 +1,261 @@
+
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <assert.h>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <stdio.h>
+#include <iterator>
+
+using namespace std;
+
+void find_max_common_seq(
+		const string &s,
+		const string &t,
+		string &cigar,
+		string &quality)
+{
+	cout << "ref = " << s << endl;
+	cout << "read= " << t << endl;
+	assert(!s.empty() && !t.empty());
+	int row = s.size() + 1;
+	int column = t.size() + 1;
+	cout << "rwo = " << row << " column = " << column << endl;
+
+	vector<vector<int> > matrix(row, vector<int>(column,0));
+	vector<vector<int> > back_track(row, vector<int>(column,-1));
+
+	for(int i = 0; i < row-1 ; ++i)
+	{
+		for(int j = 0; j < column-1; ++j)
+		{
+			if (s[i] == t[j])
+			{
+				matrix[i+1][j+1] = matrix[i][j]+1;
+				back_track[i+1][j+1] = 1;
+			}
+			if (matrix[i+1][j+1] < matrix[i+1][j])
+			{
+				matrix[i+1][j+1] = matrix[i+1][j];
+				back_track[i+1][j+1] = 2;
+			}
+			if (matrix[i+1][j+1] < matrix[i][j+1])
+			{
+				matrix[i+1][j+1] = matrix[i][j+1];
+				back_track[i+1][j+1] = 0;
+			}
+			//			matrix[i+1][j+1] = max(max(matrix[i+1][j+1], matrix[i+1][j]), matrix[i][j+1]);
+		}
+	}
+	for(int i = 0; i < row ; ++i)
+	{
+		for(int j = 0; j < column; ++j)
+		{
+			//cout << matrix[i][j] << " ";
+			printf("%2d ",matrix[i][j]);
+		}
+		cout << endl;
+	}
+	for(int i = 0; i < row ; ++i)
+	{
+		for(int j = 0; j < column; ++j)
+		{
+			//cout << matrix[i][j] << " ";
+			printf("%2d ",back_track[i][j]);
+		}
+		cout << endl;
+	}
+	cout << "end..." << endl;
+	int i = row-1;
+	int j = column-1;
+	int ins = 0;
+	int del = 0;
+	int match = 0;
+	vector<int> path(t.size()+1 , -1);
+	string ret;
+	while(back_track[i][j] != -1)
+	{
+		cout << "debug..." << endl;
+
+		if (back_track[i][j] == 0)
+		{
+			ret += 'D';
+			path[j] = i-1;
+			--i;
+		}
+		else if (back_track[i][j] == 1)
+		{
+			ret += 'M';
+			path[j] = i;
+			--i;--j;
+		}
+		else
+		{
+			ret += 'I';
+			path[j] = i;
+			--j;
+		}
+	}
+	cout << path.size() << endl;
+	copy(path.begin(), path.end(),ostream_iterator<int>(cout,"\t"));
+	cout << "ret = " << ret.size() << " " << ret << endl;
+	reverse(ret.begin(), ret.end());
+
+	i = 0;
+	int n = path.size();
+	cout << "n = " << n << endl;
+	string TEST;
+
+	while(i < n && path[i] == -1) ++i;
+	cout << " i = " << i << endl;
+
+	while(i < n)
+	{
+		//	cout << "debug..." << endl;
+		int start = i;
+		while(i < (n - 1) && path[i+1] == path[i] +1)
+		{
+			++i;
+		}
+		int end = i;
+		
+		stringstream ss;
+		ss << (end-start+1);
+		TEST += ss.str();
+		TEST += 'M';
+		cout << "TEST = " << TEST << endl;
+		
+		if (i < n-1)
+		{
+			if (path[i+1] > path[i]+1)
+			{
+				stringstream ss;
+				ss << (path[i+1]-path[i]-1);
+				TEST += ss.str();
+				TEST += 'D';
+				cout << "TEST = " << TEST << endl;
+				++i;
+			}
+			if(path[i+1] == path[i])
+			{
+				start = i;
+				while(i < n - 1 && path[i+1] == path[i])
+				{
+					++i;
+				}
+				if (i == n-1)
+				{
+					end = i+1;
+
+				}
+				else
+				{
+					end = i;
+				}
+				stringstream ss;
+				ss << (end - start);
+				TEST += ss.str();
+				TEST += 'I';
+				cout << "TEST = " << TEST << endl;
+			}
+
+		}
+		++i;
+
+	}
+	cout << "TEST = " << TEST << endl;
+
+	cigar = TEST;
+	
+	const string DELIM_OF_READ = "IDMS^\t\n";
+	int tail = cigar.find_first_of(DELIM_OF_READ);
+	 
+	//find quality
+	int tail = cigar;
+	int cur_type_base_count;
+	char map_type;
+	string quality;
+	int  i = 0,j = 0;
+	int count = 0;
+	int  k = 0;
+	while(tail != string::npos)
+	{
+		cur_type_base_count = atoi(cigar.substr(start,tail-start).c_str());
+		map_type = cigar[tail]; 
+		if (map_type == 'M')
+		{
+			int k = 0;
+			while(k < cur_type_base_count)
+			{
+				if (s[i] == t[j])
+				{
+					//++count;
+					quality += '1';
+				}
+				else
+				{
+					quality += s[i];
+				}
+				++i;++j;
+			}	
+		}
+		else if (map_type == 'I')
+		{
+			j += cur_type_base_count;
+		}
+		else if (map_type == 'D')
+		{
+			i += cur_base_type_count;
+		}
+		else
+		{
+			//do nothing
+		}
+		
+		start = tail+1;
+		tail = read_qual.find_first_of(DELIM_OF_READ, start);
+
+
+
+	}
+
+
+
+}
+
+int main()
+{
+	int count = 12;
+	stringstream ss;
+	ss <<  count;
+	cout << "ss = " << ss.str() << endl;
+
+	//	string ref = "AGACCATCAATCGCTGGCTGGCCGAAGCAGGCGTCA";
+	//	string ref = "AGACCATCAATCGCTGGCTGGCCGAAGCAGGCGTCAT";
+	//	string read = "AGACCATCAATCGCTGGCTGCCGAAGCAGGCGTCAT";
+	//	string ref = "TACACCTGAAATCTTTACTGCCATATTCACCCCAC";
+	//	string read = "AACACCCTAAAATCTTTACTGCCATATTCACCCCAC";
+
+	//	string ref =  "TACACCTGAAATCTTTACTGCCATATTCACCCCACA";
+	//	string read = "AACACCCTAAAATCTTTACTGCCATATTCACCCCAC";
+
+		string ref = "TGCGTATTCACTGCATGCAGCATTGGTACAACCTGA";
+		string read = "TACGCATTCACTGCATGCAGCATTGGACAAACTGAG";
+
+	//	string ref  = "ACGGTATCTGATGGCCACGGGATTGGTGCGCCGACT";
+	//	string read = "ACGGAACGGTATCTGATGGCCACGGGATTGGTGCGC";
+
+	//string ref  = "GGATGCAGATGTGGCTGCTGATTGTAGTGACGCTGA";
+	//string read = "GGATGCAGATGTGGCTGCTGGTTGTAGTGACAGCTG";
+	string cigar, quality;
+	find_max_common_seq(ref,read,cigar, quality);
+	cout << read << endl;
+	cout << ref << endl;
+	cout << cigar << endl;
+	cout << quality << endl;
+}
+
+
+

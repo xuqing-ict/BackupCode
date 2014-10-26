@@ -1,0 +1,42 @@
+/**
+ * @file call.cc
+ * @brief 
+ * @author Qing Xu, xuqinguestc@163.com
+ * @version 0.1.00
+ * @date 2014-10-12
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Base
+{
+public:
+    virtual func(int x) { cout << "Base virtual int" << endl; }
+    float func(float x) { cout << "Base float" << endl; }
+    short func(short x) { cout << "Base short" << endl; }
+};
+
+class Derived : public Base
+{
+public:
+    int func(int) { cout << "Derived int" << endl; }
+    float func(float) { cout << "Derived float" << endl; }
+};
+
+
+int main(void)
+{
+    Derived d;
+    Base *p1 = &d;
+    p1->func(77777);
+    p1->func(77777.7);
+    p1->func(124);
+
+
+    Derived *p2 = &d;
+    p2->func(123);
+    p2->func(777.7);
+
+    return 0;
+}

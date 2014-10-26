@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+ * eg. N = 3
+ * 1 2 6
+ * 3 5 7
+ * 4 8 9
+ * */
+void print(const int n)
+{
+    if(n < 0) return;
+    vector<vector<int> > A(n,vector<int>(n,0));
+    int num=1;
+    for(int i=1;i<=n;++i)
+    {
+        for(int j=1;j<=i;++j)
+        {
+            if(i&1)
+                A[i-j][j-1] = num++;
+            else
+                A[j-1][i-j] = num++;
+        }
+    }
+    for(int i=1;i<=n-1;++i)
+    {
+        for(int j=1;j<=n-i;++j)
+        {
+            if((n+i) &1)
+                A[n-j][i+j-1] = num++;
+            else
+                A[i+j-1][n-j] = num++;
+        }
+    }
+    for(int i=0;i<n;++i)
+    {
+        for(int j=0;j<n;++j)
+            cout << A[i][j] << "\t";
+        cout <<endl;
+    }
+}
+
+/*
+ * N = 3
+ * 1 2 3
+ * 8 9 4
+ * 7 6 5
+ * */
+void print2(const int n)
+{
+    int num=1; //从1开始
+    int left=0,right=n-1,up=0,down=n-1;
+    vector<vector<int> > A(n,vector<int>(n,0));
+    while(left<=right)
+    {
+        A[up][left]=num;
+        A[up][right] = A[up][left] + (right-left);
+        A[down][right] = A[up][right] + (right-left);
+        A[down][left] = A[down][right] + (right-left);
+        for(int i=left+1;i<right;++i)
+            A[up][i] = A[up][i-1]+1;
+        for(int i=up+1;i<down;++i)
+            A[i][right] = A[i-1][right]+1;
+        for(int i=right-1;i>left;--i)
+            A[down][i] = A[down][i+1]+1;
+        for(int i=down-1;i>up;--i)
+            A[i][left]= A[i+1][left]+1;
+        ++left;--right;++up;--down;
+        num = A[left][up-1]+1;
+    }
+    for(int i=0;i<n;++i)
+    {
+        for(int j=0;j<n;++j)
+            cout << A[i][j] << "\t";
+        cout << endl;
+    }
+
+}
+int main(void)
+{
+    int n;
+    while(1)
+    {
+        cin >> n;
+        //print(n);
+        print2(n);
+    }
+    return 0;
+}

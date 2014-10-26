@@ -1,0 +1,55 @@
+/**
+ * @file pushPop.cc
+ * @brief 
+ * @author Qing Xu, xuqinguestc@163.com
+ * @version 0.1.00
+ * @date 2014-08-28
+ */
+//判断一给定的pop与push序列是否一致
+#include <iostream>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+bool valid(const vector<int> &push, const vector<int> &pop)
+{
+    const int n = push.size();
+    assert(n == pop.size());
+
+    stack<int> s;
+    int cur=0;
+    for(int i=0;i < n && cur < n;++i)
+    {
+        if(s.empty() || s.top() != pop[cur])
+        {
+            s.push(push[i]);
+        }
+        if(!s.empty() && s.top() == pop[cur])
+        {
+            ++cur;
+            s.pop();
+        }
+    }
+    while(cur<n && !s.empty() && s.top() == pop[cur]){++cur;s.pop();}
+    return (cur==n) && (s.empty());
+}
+int main(void)
+{
+    int N;
+    vector<int> push,pop;
+    while(scanf("%d\n",&N))
+    {
+        push.resize(N);
+        pop.resize(N);
+        for(int i=0;i<N;++i)
+            cin >> push[i];
+        for(int i=0;i<N;++i)
+            cin >> pop[i];
+       if(valid(push,pop))
+           cout << "Yes" << endl;
+       else
+           cout << "No" << endl;
+    }
+    return 0;
+}

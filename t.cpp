@@ -1,0 +1,44 @@
+#include<iostream>
+
+using namespace std;
+
+
+class Airplane
+{
+public:
+	virtual void fly(string &destination) = 0； //纯虚函数，由各个航线自己指定目的地
+	...
+protected:
+	void defaultFly(const string &destination);
+ 
+
+};
+void Airplane :: defaultFly (const string &destination))
+{
+//default fly strategy
+} 
+
+//SecA 与 SecB自行实现fly函数决定目的地。
+class SecA : public Airplane 
+{
+	virtual void fly(string &destination) 
+	{
+		Airplane::defaultFly(destination);
+	}
+     ...
+} ; 
+
+class SecB : public Airplane 
+{
+	virtual void fly(string &destination) 
+	{
+		Airplane::defaultFly(destination);
+	}
+...
+} ; 
+
+
+int main()
+{
+	return 0;
+}

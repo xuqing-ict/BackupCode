@@ -1,0 +1,6 @@
+DFS iterative code 
+BFS iterative code
+in permutate.cpp implement the permutation function.
+可以把n个元素共n!种不同的排列生成出来。
+通过使用位运算,可以枚举从n个元素中取出k个的共Cnk种状态
+某个集合中的全部子集

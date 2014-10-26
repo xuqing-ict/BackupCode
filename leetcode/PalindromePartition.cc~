@@ -1,0 +1,132 @@
+/**
+ * @file PalindromePartition.cc
+ * @brief palindrome partition
+ * @author Qing Xu, xuqinguestc@163.com
+ * @version 0.1.00
+ * @date 2014-08-11
+ */
+/*Given a string s, partition s such that every substring of the partition is a palindrome.
+
+  Return all possible palindrome partitioning of s.
+
+  For example, given s = "aab",
+  Return
+
+  [
+  ["aa","b"],
+  ["a","a","b"]
+  ]
+  */
+//dfs version
+#include <bits/stdc++.h>
+using namespace std;
+
+bool isPalin(const string &s)
+{
+    const int n=s.size();
+    if(n<2) return true;
+    int i=0,j=n-1;
+    while(i<j && s[i]==s[j]){++i;--j;}
+    return i>=j;
+}
+
+void helper(const string s, vector<string> &cur, int index, const vector<vector<int> > &prev, vector<vector<string> > &ret)
+{
+    if(index==0 || prev[index].empty()) 
+    {
+        if(index==0)
+        {
+            ret.push_back(cur);
+            reverse(ret.back().begin(), ret.back().end());
+        }
+        return;
+    }
+    for(int i=0;i<prev[index].size();++i)
+    {
+        cur.push_back(s.substr(prev[index][i],index-prev[index][i]));
+        helper(s,cur,prev[index][i],prev,ret);
+        cur.pop_back();
+    }
+}
+
+vector<vector<string>> partition(const string s)
+{
+    vector<vector<string> > ret;
+    if(s.empty()) return ret;
+    const int n=s.size();
+    vector<int> f(n+1,false);
+    vector<vector<int> > prev(n+1,vector<int>());
+
+    f[0]=true;
+    for(int i=1;i<=n;++i) //[0--i-1]
+    {
+        for(int k=0; k<i;++k) //index
+        {
+            string tmp=s.substr(k,i-k);
+            if(isPalin(tmp) && f[k]) 
+            {
+                f[i]=true;
+                prev[i].push_back(k);
+            }
+        }
+    }
+
+    cout << "prev : " << endl;
+    for(int i=0;i<=n;++i)
+    {
+        cout << i << " \t " ;
+        for(int j=0;j <prev[i].size();++j)
+            cout << prev[i][j] << "\t";
+        cout << endl;
+    }
+    cout << "return "<< endl;
+
+    vector<string> cur;
+    helper(s,cur,n,prev,ret);
+    return ret;
+}
+
+int minCut(const string s) 
+{
+
+  const int n=s.size();
+  if(n<2) return 0;
+  vector<int> f(n+1,INT_MAX);
+  vector<bool> g(n+1,false);
+  g[0]=true;
+  f[0]=-1;
+
+  for(int i=1; i<=n; ++i)
+  {
+    for(int k=0; k<i; ++k)
+    {
+      if(g[k] && isPalin(s.substr(k,i-k)))
+      {
+        g[i]=true;
+        f[i]=min(f[i],f[k]+1);
+      }
+    }
+  }
+  cout << "minCut: ";
+  for(int i=0;i<=n;++i)
+      cout << f[i] << "\t" ;
+  cout << endl;
+  return f[n];
+}
+
+ostream_iterator<string> out(cout, "\t");
+
+int main(void)
+{
+    string s="abba";
+    vector<vector<string> > ret=partition(s);
+    for(int i=0;i<ret.size();++i)
+    {
+        copy(ret[i].begin(), ret[i].end(),out);
+        cout << endl;
+    }
+    cout << "minCut..." << endl;
+    cout << minCut(s)<< endl;
+    cout << isPalin("aabb") << endl;
+    return 0;
+}

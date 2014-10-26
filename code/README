@@ -1,0 +1,13 @@
+quickSort.cpp right
+heapSort.cpp right
+monoQueue.cpp right
+binarySearch.cpp right
+findSubArrayNearK.cpp wrong
+premutate.cpp  used STL but no correct answer!!why?
+mergeSort.cpp right
+Fib.cpp  right 
+significantInverseCounting.cpp right
+inverseCounting.cpp right
+HollandFlag.cpp right
+quickSortSameElem.cpp right
+KMP.cpp right

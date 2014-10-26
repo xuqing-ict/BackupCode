@@ -1,0 +1,106 @@
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+
+static int strToInt(string s)
+{
+	assert(!s.empty());
+	int result = 0;
+        bool neg = false;
+        size_t k = 0 ;
+        if(s[0] == '+' || s[0] == '-')
+        {
+            neg = (s[0] == '-');
+            k++;
+        }
+        while( k < s.size())
+        {
+            assert(isdigit(s[k]));
+            result = result*10 + (s[k++] - '0');
+        }
+        return neg ? (0-result) : result;
+}
+
+    static bool isDigits(string s)
+    {
+        assert(!s.empty());
+        for(size_t k = 0 ; k < s.size() ; ++k)
+        {
+            if(! ( isdigit( s[k] ) ) ) return false;
+        }
+        return true;
+    }
+
+    int evalRPN(vector<string> &tokens) {
+    
+        stack<int> s;
+        if( tokens.size() == 0 ) return 0;
+        
+        vector<string>::size_type k = 0;
+        vector<string>::size_type n = tokens.size();
+        
+        int num1,num2;
+        int temp;
+        
+        while( k < n )
+        {
+            //digit
+            if(isDigits(tokens[k]))
+            {
+                s.push(strToInt(tokens[k]));
+                k++;
+            }
+            else
+            {
+                assert(tokens[k].size() == 1);
+                assert(s.empty());
+                num1 = s.top();
+                s.pop();
+                assert(s.empty());
+                num2 = s.top();
+                s.pop();
+
+                //+
+                if(tokens[k][0] == '+')
+                {
+                    temp = num2 + num1;
+                    s.push(temp);
+                }
+                else if(tokens[k][0] == '-')
+                {
+                    temp = num2 - num1;
+                    s.push(temp);
+                }
+                else if(tokens[k][0] == '*')
+                {
+                    temp = num2 * num1;
+                    s.push(temp);
+                }
+                else if(tokens[k][0] == '/')
+                {
+                    if(num2 == 0){s.push(0);}
+                    else
+                    {
+                        temp = num2/num1;
+                        s.push(temp);
+                    }
+                }
+                else
+                {
+                    exit(1);
+                }
+                k++;
+            }
+        }
+        return s.top();
+    }
+int main()
+{
+	vector<string> tokens;
+	tokens.push_back("0");tokens.push_back("3");tokens.push_back("/");
+	cout << evalRPN(tokens)	<< endl;
+}
+

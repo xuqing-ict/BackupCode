@@ -1,0 +1,43 @@
+/**
+ * @file ExceptionSafety.cc
+ * @brief  expection safety
+ * @author Qing Xu, xuqinguestc@163.com
+ * @version 0.1.00
+ * @date 2014-06-14
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef int Image ;
+
+class prettyMenu
+{
+public:
+  prettyMenu():imageChangesl(0){
+    bgImage = new int(0);
+  }
+  void changeBackGroung(std::istream &imgsrc);
+private:
+  mutex m;
+  Image * bgImage;
+  int imageChanges;
+
+};
+//此版本的change函数没有提供任何异常安全性的保证
+void prettyMenu::changeBackGroung(std::istream &imgsrc)
+{
+  lock(&m);
+  delete bgImage;
+  ++imageChanges;
+  bgImage =  new int(imageChanges);//如果此处抛出异常，互斥器资源泄漏
+  //并且bgImage指向已删除的对象，并且imegeChanges已经加1
+  unlock(m);
+}
+//解决资源泄漏使用“对象管理资源”
+int main()
+{
+  prettyMenu pm;
+  pm.changeBackGroung("1234");
+  return 0;
+}
