@@ -10,6 +10,7 @@ struct ListNode{
 	ListNode(int x):val(x),next(NULL){}
 };
 
+// The third parameter of Priority_queue is a type
 class mycompare{
 private:
 	bool reverse;
