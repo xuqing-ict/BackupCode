@@ -7,7 +7,12 @@
  */
 //最长回文子串
 
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <cassert>
+#include <algorithm>
 using namespace std;
 
 
@@ -111,7 +116,7 @@ int valid(const string &lhs, const string &rhs)
     bool label1 = false, label2 = false;
     for(auto a: lhs) if(a == '#') label1 = true;
     for(auto a: rhs) if(a == '#') label2 = true;
-    if(label1 && label2 || (!label1 &&!label2)) return 0;
+    if((label1 && label2 )|| (!label1 &&!label2)) return 0;
 
     int i = 0;
     for(i=0;i < min(lhs.size(),rhs.size());++i)
@@ -148,6 +153,7 @@ string LongestPalindrome_suffix(string s)
     }
     return ret;
 }
+/*
 //Manacher O(n)
 string Manacher(const string &str)
 {
@@ -195,32 +201,80 @@ string Manacher(const string &str)
         if(a!='#')ret2 += a;
     return ret2;
 }
+*/
+ string Manacher(const string &s)
+{
+    cout << "enter..." << endl;
+    const int n = s.size();
+    string tmp;
+    tmp += '$';
+    for(auto a : s){tmp += '#'; tmp += a;}
+    tmp += '#';
+    cout << tmp << endl;
+    const int m = tmp.size();
+    vector<int> P(m,0);
+    int idx = -1, right = -1;
+    for(int i=1;i<m;++i)
+    {
+        P[i] = (i < right)?(min(P[2*idx-i],right-i)):1;
+        while(tmp[i+P[i]] == tmp[i-P[i]]) P[i]++;
+        if(i + P[i] > right)
+        {
+            right = i + P[i];
+            idx = i;
+        }
+    }
+    auto pos = max_element(P.begin(),P.end());
+    int len = *pos-1;
+    string ret;
+    int i = pos-P.begin();
+    ret += tmp[i];
+    cout << "middle : " << ret << endl;
+    int k = 1;
+    //consrtruct the palindrome
+    while(len)
+    {
+        ret += tmp[i+k];
+        ret = tmp[i-k] + ret;
+        --len;
+        ++k;
+    }
+    //trim '#'
+    k = 0;
+    for(auto a: ret)
+        if(a != '#') ret[k++] = a;
+    ret.resize(k);
+    return ret;
+}
 
 int main(void)
 {
     int k = 0;
     srand(time(nullptr));
 
-    while(k <1)
+    while(k < 10)
     {
         ++k;
         int n = rand()%10+20;
         string s;
+        /*
         s.resize(n);
         for(int i=0;i<n;++i)
             s[i]=rand()%26+'a';
         cout << s << endl;
         s = "lkkhtqibrzttkjbyfprybjqygbhd";
-        string ret1 = LongestPalindrome(s);
-        string ret2 = LongestPalindrome_dp2(s);
-        string ret3 = LongestPalindrome_extend(s);
-        string ret4 = LongestPalindrome_suffix(s);
-        //string ret4 = Manacher(s);
-        cout << ret1 << endl;
-        cout << ret2 << endl;
-        cout << ret3 << endl;
+        */
+        cin >> s;
+        //string ret1 = LongestPalindrome(s);
+        //string ret2 = LongestPalindrome_dp2(s);
+        //string ret3 = LongestPalindrome_extend(s);
+        //string ret4 = LongestPalindrome_suffix(s);
+        string ret4 = Manacher(s);
+        //cout << ret1 << endl;
+        //cout << ret2 << endl;
+        //cout << ret3 << endl;
         cout << ret4 << endl;
-        assert((ret1 == ret2 && ret1 == ret3 ) || ( ret2.size() == ret3.size() && ret1.size() == ret4.size()));
+        //assert((ret1 == ret2 && ret1 == ret3 ) || ( ret2.size() == ret3.size() && ret1.size() == ret4.size()));
     }
        return 0;
 
