@@ -27,17 +27,18 @@ int cutMaxString(const string &s, const int m)
     const int n = s.size();
     if(n < m) return -1; // illegal input
     vector<vector<int> > f(n+1,vector<int>(m+1,0));
+    // f[len][# of cuts]
 
     //j = 1 : 1 segment
     for(int i=1;i<=n;++i)
         f[i][1] = atoi(s.substr(0,i).c_str());
 
-    for(int i=1;i<=n;++i)
+    for(int i=1;i<=n;++i) //[0...i-1]
     {
-        for(int j=1;j<=m;++j)
+        for(int j=2;j<=m;++j) //j segments
         {
-            for(int k=j-1;k<=i;++k)
-                f[i][j] = max(f[i][j],atoi(s.substr(k,j-k+1).c_str())*f[k][j-1]);
+            for(int k=j-1;k<=i;++k) // the last cut
+                f[i][j] = max(f[i][j],atoi(s.substr(k,i-k).c_str())*f[k][j-1]);
         }
     }
     return f[n][m];
