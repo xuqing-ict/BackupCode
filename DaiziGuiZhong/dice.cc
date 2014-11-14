@@ -22,15 +22,20 @@
 
 using namespace std;
 
-/*
-void helper(const int n, const int m, int cur_index, int cur_sum, vector<int> &cnt)
+
+void helper(const int n, const int m, int cur_index, int sum, vector<int> &cnt)
 {
-    if(cut_index > n) return;
+    if(cur_index > n) 
+    {
+        cnt[sum]++;
+        return;
+    }
+    int tmp = sum;
     for(int i=1;i<=m;++i)
     {
-        //update
-     
-        helper(n,m,cur_index+1,cnt);
+        sum = tmp;
+        sum += i; // add current dice's index
+        helper(n,m,cur_index+1,sum,cnt);
     }
 }
 
@@ -44,7 +49,7 @@ double win2(const int n, const int m, const int x)
     cout << cn << " " << sum << endl;
     return static_cast<double>(cn)/sum;
 }
-*/
+
 
 double win(const int n, const int m, const int x)
 {
@@ -73,18 +78,28 @@ double win(const int n, const int m, const int x)
     for(int i=x;i<m*n+1;++i)
         cn += prev[i];
     int sum = accumulate(prev.begin(),prev.end(),0);
-    cout << cn << "/" << sum << endl;
+    cout << cn << " " << sum << endl;
     return static_cast<double>(cn)/sum;
 }
 
 
 int main(void)
 {
-    int n,m; // n dices, each 1-m 
-    cin >> n >> m; //n dices, each with m
-    int x;
-    cin >> x ; // greater than x win.
-    cout << win(n,m,x) << endl;
-    //cout << win2(n,m,x) << endl;
+    srand(time(nullptr));
+    int k=100;
+    while(k--)
+    {
+        int n,m; // n dices, each 1-m 
+        //cin >> n >> m; //n dices, each with m
+        n = rand()%10+1;
+        m = rand()%10+3;
+        int x;
+        //cin >> x ; // greater than x win.
+        x = rand()%(m*n)+n;
+        double ret1=win(n,m,x);
+        double ret2=win(n,m,x);
+        assert(ret1 == ret2);
+        cout << ret1 << " " << ret2 << endl;
+    }
     return 0 ;
 }

@@ -1090,6 +1090,34 @@ int numPair(const vector<int> &A, const vector<int> &B)
 代码为：
 
 ```
+void helper(const int n, const int m, int cur_index, int sum, vector<int> &cnt)
+{
+    if(cur_index > n)
+    {
+        cnt[sum]++;
+        return;
+    }
+    int tmp = sum;
+    for(int i=1;i<=m;++i)
+    {
+        sum = tmp;
+        sum += i; // add current dice's index
+        helper(n,m,cur_index+1,sum,cnt);
+    }
+}
+
+double win2(const int n, const int m, const int x)
+{
+    if(x < n || x > m*n) return 0;
+    vector<int> cnt(n*m+1,0);
+    helper(n,m,1,0,cnt);
+    int cn = accumulate(cnt.begin()+x,cnt.end(),0);
+    int sum = accumulate(cnt.begin(),cnt.end(),0);
+    cout << cn << " " << sum << endl;
+    return static_cast<double>(cn)/sum;
+}
+
+//循环版本
 double win(const int n, const int m, const int x)
 {
     if(x < n || x > m*n) return 0.0; // illegal x
@@ -1163,6 +1191,8 @@ void shuffle(char *A, const int R, const int C)
 ## T33 : 巧妙排序 + 荷兰国旗
 ### 排序只有1，2，3三个元素的数组，不能统计1，2，3的个数
 
+#### 更加巧妙一点的方法，那就是将数组中的3个元素分别看作质数2，3，5，...，并将这个质数乘起来，那么积的结果的2，3，5，。。。的因子的个数，依次填入之前的数字即可了。
+
 代码为：
 
 ```
@@ -1186,7 +1216,6 @@ void sort123(int *A, const int n)
     }
 }
 ```
-
 ## T34 : 数组波谷
 ### 一个数组A[1...n]，满足A[1]>=A[2], A[n] >= A[n-1]。A[i]被成为波谷，意味着：A[i-1] >= A[i] <= A[i+1]。请给出一个算法，找到数组中的一个波谷。O(n)的方法，是很直接，有更快的方法么？
 
