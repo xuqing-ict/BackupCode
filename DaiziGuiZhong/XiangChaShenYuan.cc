@@ -6,7 +6,18 @@
  * @date 2014-08-03
  */
 /*给定一个数组，我们可以找到两个不相交的、并且是连续的子数组A和B，A中的数字和为sum(A), B中的元素和为sum(B)。找到这样的A和B，满足sum(A) - sum(B)的绝对值是最大的。 例如：[2, -1 -2, 1, -4, 2, 8]划分为A=[-1, -2, 1, -4], B=[2, 8]， 最大的值为16*/
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <unordered_map>
+#include <set>
+#include <unordered_set>
+#include <algorithm>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 using namespace std;
 
 void minSub(const vector<int> &A, vector<int> &minL, vector<int> &minR, vector<int> &maxL, vector<int> &maxR)

@@ -1,3 +1,9 @@
+Date: 2014-11-14  
+Title: T1 : 旋转数组的最小值  
+Published: true  
+Type: post  
+Excerpt:   
+
 待字闺中全部题解
 ## T1 : 旋转数组的最小值
 代码：
@@ -8,7 +14,7 @@ int minVal(int A[], int n)
     if(A == NULL || n <= 0 ) return -1;
     int left=0,right=n-1;
     int mid = left; //处理有序的情况
-  //  ** left 为左边大的递增数组的尾巴，right为右边的小的递增数组的尾部，一直夹逼！！！**
+    //  ** left 为左边大的递增数组的尾巴，right为右边的小的递增数组的尾部，一直夹逼！！！**
     while(A[left] >= A[right])
     {
         if(left+1==right) return A[right];
@@ -23,20 +29,20 @@ int minVal(int A[], int n)
 ## T2：子数组的最大乘积
 代码为：
 ```
-    int maxProduct(int A[], int n) {
-        int global = INT_MIN;
-        int local_min = A[0], local_max = A[0];
-        global = local_max;
-        for(int i=1;i<n;++i)
-        {
-            int a = local_min * A[i];
-            int b = local_max * A[i];
-            local_min = min(a,min(b,A[i]));
-            local_max = max(a,max(b,A[i]));
-            global = max(global,local_max);
-        }
-        return global;
+int maxProduct(int A[], int n) {
+    int global = INT_MIN;
+    int local_min = A[0], local_max = A[0];
+    global = local_max;
+    for(int i=1;i<n;++i)
+    {
+        int a = local_min * A[i];
+        int b = local_max * A[i];
+        local_min = min(a,min(b,A[i]));
+        local_max = max(a,max(b,A[i]));
+        global = max(global,local_max);
     }
+    return global;
+}
 };
 ```
 ## T3 ：最长01子串
@@ -56,27 +62,27 @@ string longest01(const string &s)
     unordered_map<int,P> ex;  //key : subSum value, value: pair  (  minIndex, maxIndex)
     for(int i=0;i<n;++i)
     {
-      auto it = ex.find(sub[i]);
-       if(it!=ex.end()) //update the minIndex and maxIndex
-      {
-        (*it).second.first = min((*it).second.first,i);
-        (*it).second.second = max((*it).second.second,i);
-      }
-       else
-      {
-       if(sub[i] == 0)  //**注意此处对于0的特殊处理**
-          ex.insert(make_pair(sub[i],make_pair(-1,i)));
-       else
-          ex.insert(make_pair(sub[i],make_pair(i,i)));
-      }
-    }
-       for(auto a:ex)
-            cout << a.first << " " << a.second.first << " " << a.second.second << endl;
-    for(auto a:ex)
+        auto it = ex.find(sub[i]);
+        if(it!=ex.end()) //update the minIndex and maxIndex
         {
-            int l =a.second.first, r = a.second.second;
-            if(r-l >= ans.size()) ans = s.substr(l+1,r-l);
+            (*it).second.first = min((*it).second.first,i);
+            (*it).second.second = max((*it).second.second,i);
         }
+        else
+        {
+            if(sub[i] == 0)  //**注意此处对于0的特殊处理**
+                ex.insert(make_pair(sub[i],make_pair(-1,i)));
+            else
+                ex.insert(make_pair(sub[i],make_pair(i,i)));
+        }
+    }
+    for(auto a:ex)
+        cout << a.first << " " << a.second.first << " " << a.second.second << endl;
+    for(auto a:ex)
+    {
+        int l =a.second.first, r = a.second.second;
+        if(r-l >= ans.size()) ans = s.substr(l+1,r-l);
+    }
     return ans;
 }
 
@@ -153,47 +159,47 @@ P minInteval(const vector<vector<int> > &A)
 //不含有重复元素，就是简单的二分搜索
 int magicIndex(const vector<int> &A)
 {
-const int n=A.size();
-if(n==0) return -1;
-int left=0,right=n-1;
-while(left <= right)
-{
-    int mid=left+(right-left)/2;
-    if(A[mid] == mid) return mid;
-    else if (A[mid] > mid)right=mid-1;
-    else left=mid+1;
-  }
-  return -1;
+    const int n=A.size();
+    if(n==0) return -1;
+    int left=0,right=n-1;
+    while(left <= right)
+    {
+        int mid=left+(right-left)/2;
+        if(A[mid] == mid) return mid;
+        else if (A[mid] > mid)right=mid-1;
+        else left=mid+1;
+    }
+    return -1;
 }
 
 //含有重复元素，那么我们就需要递归的对左右进行而分搜索
 int binary_search(const vector<int> &A, int left, int right)
 {
     int l=-1,r=-1;
-  if(left <= right)
-  {
-    int mid=left+(right-left)/2;
-    if(A[mid]==mid) return mid;
-    else if(A[mid] < mid)
+    if(left <= right)
     {
-      l=binary_search(A,left,min(A[mid],mid-1));
-      if(l != -1) return l;
-      r=binary_search(A,mid+1,right);
+        int mid=left+(right-left)/2;
+        if(A[mid]==mid) return mid;
+        else if(A[mid] < mid)
+        {
+            l=binary_search(A,left,min(A[mid],mid-1));
+            if(l != -1) return l;
+            r=binary_search(A,mid+1,right);
+        }
+        else
+        {
+            l=binary_search(A,left,mid-1);
+            if(l != -1) return l;
+            r=binary_search(A,max(mid+1,A[mid]),right);
+        }
     }
-    else
-    {
-      l=binary_search(A,left,mid-1);
-        if(l != -1) return l;
-      r=binary_search(A,max(mid+1,A[mid]),right);
-    }
-  }
-  return (l==-1)?r:l;
+    return (l==-1)?r:l;
 }
 
 int magicIndexWithRepeat(const vector<int> &A)
 {
-  const int n = A.size();
-  return binary_search(A,0,n-1);
+    const int n = A.size();
+    return binary_search(A,0,n-1);
 }
 ```
 ## T6：数字游戏
@@ -349,308 +355,308 @@ void count2(vector<int> &A)
 ### 给定两个字符串A和B，判断A中是否包含由B中字符重新排列成的新字符串。例如：A=abcdef, B=ba，结果应该返回true。因为ba的排列ab，是A的子串。
 #### 依次检查字符串A的所有的长度为Len(B)的子串，然后比较排序两者是否是变位词即可。
 
-代码为：
+        代码为：
 
 ```
-bool occur(string s, string t)
-{
-    const int m = s.size(), n = t.size();
-    if(n > m) return false;
-    string tmp;
-    sort(t.begin(),t.end());
+        bool occur(string s, string t)
+        {
+            const int m = s.size(), n = t.size();
+            if(n > m) return false;
+            string tmp;
+            sort(t.begin(),t.end());
 
-    for(int i=0;i <= m-n+1; ++i)
-    {
-        tmp = s.substr(i,n);
-        sort(tmp.begin(),tmp.end());
-        if(tmp == t) return true;
-        auto it = find(tmp.begin(),tmp.end(),s[i]);
-        if(i+n >= m ) break; //这里必须考虑越界的问题
-        *it = s[i+n];
-    }
-    return false;
-}
+            for(int i=0;i <= m-n+1; ++i)
+            {
+                tmp = s.substr(i,n);
+                sort(tmp.begin(),tmp.end());
+                if(tmp == t) return true;
+                auto it = find(tmp.begin(),tmp.end(),s[i]);
+                if(i+n >= m ) break; //这里必须考虑越界的问题
+                *it = s[i+n];
+            }
+            return false;
+        }
 ```
 ## T11 ：树的高度
 ### 有一个棵树，不一定是二叉树，有n个节点，编号为0到n-1。有一个数组A，数组的索引为0到n-1，数组的值A[i]表示节点i的父节点的id，根节点的父节点id为-1。给定数组A，求得树的高度。
 #### 树的问题，一般使用递归来求解，但是，存在着大量的重复运算，那么很简单，用一个备忘录记录下已经计算了的节点的高度。
-代码为：
+        代码为：
 ```
-int helper(const vector<int> &A, const int idx, vector<int> &height)
-{
-    if(height[idx] != -1 )return height[idx];
-    if(A[idx] == -1) {height[idx] = 1; return 1;}
-    height[idx] = 1 + helper(A,A[idx], height);
-    return height[idx];
-}
+        int helper(const vector<int> &A, const int idx, vector<int> &height)
+        {
+            if(height[idx] != -1 )return height[idx];
+            if(A[idx] == -1) {height[idx] = 1; return 1;}
+            height[idx] = 1 + helper(A,A[idx], height);
+            return height[idx];
+        }
 
-vector<int> printHeight(const vector<int> &A)
-{
-    const int n = A.size();
-    vector<int> height(n,-1);
-    for(int i = 0 ; i < n ; ++i)
-        helper(A,i,height);
-    return height;
-}
+    vector<int> printHeight(const vector<int> &A)
+    {
+        const int n = A.size();
+        vector<int> height(n,-1);
+        for(int i = 0 ; i < n ; ++i)
+            helper(A,i,height);
+        return height;
+    }
 ```
 ## T12：123排序（荷兰国旗问题）
 ### 快速排序的partition的思想，注意循环不变式的定义即可。
-代码为：
+        代码为：
 ```
-void sort123(int *A, const int n)
-{
-    if(A == nullptr || n < 2) return;
-    int p1=0,p2=n-1;
-    int  k = 0;
-    while(k <= p2)
-    {
-        if(A[k] == 1) {swap(A[k++],A[p1++]);}
-        else if(A[k] == 3){swap(A[k],A[p2--]);}
-        else ++k;
-    }
-}
+        void sort123(int *A, const int n)
+        {
+            if(A == nullptr || n < 2) return;
+            int p1=0,p2=n-1;
+            int  k = 0;
+            while(k <= p2)
+            {
+                if(A[k] == 1) {swap(A[k++],A[p1++]);}
+                else if(A[k] == 3){swap(A[k],A[p2--]);}
+                else ++k;
+            }
+        }
 ```
 ## T13： 删除字符串
 ### 删除字符串中的“b”和“ac”，需要满足如下的条件：字符串只能遍历一次并且不能够使用额外的空间。
 #### 涉及到这些字符串处理的问题，其实都是状态机的问题，至于状态机，自己不熟。那就直接按照题目的要求来编写代码。
 #### 如果当前的字符是b，那么删除即可，如果当前的字符是'a',那么还要考虑下面的字符是不是c，如果是c，删除即可，如果不是，那么保留a，依次循环往复即可。
-//代码有BUG！！自己写的，下面贴的是对的
+        //代码有BUG！！自己写的，下面贴的是对的
 
-代码为：
+        代码为：
 ```
-//删除'b' 和 "ac"
-void deleteChars_ans(char *s)
-{
-    cout << "s : " << s << endl;
+        //删除'b' 和 "ac"
+        void deleteChars_ans(char *s)
+        {
+            cout << "s : " << s << endl;
 
-    if(s == nullptr ) return;
-    int i = 0 ; //下一个合法字符已经存放的位置
-    int PREV = false; // 前一个字符是A的情况
-    int k = 0;
-    for(k = 0 ; s[k] != '\0'; ++k)
-    {
-        cout << s[k] << endl;
-        if(PREV == false && s[k] != 'a' && s[k] != 'b')
-        {
-            s[i++] = s[k];
-        }
-        if(PREV  && s[k] != 'c')
-        {
-            s[i++] = 'a';
-            if(s[k] != 'a' && s[k] != 'b')
+            if(s == nullptr ) return;
+            int i = 0 ; //下一个合法字符已经存放的位置
+            int PREV = false; // 前一个字符是A的情况
+            int k = 0;
+            for(k = 0 ; s[k] != '\0'; ++k)
             {
-                s[i++] = s[k];
+                cout << s[k] << endl;
+                if(PREV == false && s[k] != 'a' && s[k] != 'b')
+                {
+                    s[i++] = s[k];
+                }
+                if(PREV  && s[k] != 'c')
+                {
+                    s[i++] = 'a';
+                    if(s[k] != 'a' && s[k] != 'b')
+                    {
+                        s[i++] = s[k];
+                    }
+                }
+                PREV = (s[k] == 'a');
+                if(i > 1 && s[i-2] == 'a'  && s[i-1] == 'c')
+                    i-=2;
             }
-        }
-        PREV = (s[k] == 'a');
-        if(i > 1 && s[i-2] == 'a'  && s[i-1] == 'c')
-            i-=2;
-    }
 
-    if(PREV) // 说明还有最后一个'a'需要写到合理的位置
-        s[i++] = 'a';
-    s[i] = '\0';
-}
+            if(PREV) // 说明还有最后一个'a'需要写到合理的位置
+                s[i++] = 'a';
+            s[i] = '\0';
+        }
 ```
 
 ## T14：最小公倍数
 ### 给定 n, 求最小的整数 M, 使得它能够被 1-n 中的所有数整除。 其实就是求 1-n 的最小公倍数
 #### 也就是将每一个数质因子分解，然后求所有的质因子的最高次幂的乘积即可，例如：
-1 2 3 4 5 6  == 》 1   2  3   2^2， 5， 2*3 ==>那么分别提取这些质因子的最高次幂为： 2^2 * 3 * 5 = 60 .
+        1 2 3 4 5 6  == 》 1   2  3   2^2， 5， 2*3 ==>那么分别提取这些质因子的最高次幂为： 2^2 * 3 * 5 = 60 .
 #### 同样需要注意的是溢出的问题。
-代码为：
+        代码为：
 ```
-int minMultiply(const int n)
-{
-    if(n <= 2) return n;
-    vector<int> vec(n,0);
-    for(int i=0;i<n;++i) vec[i] = i + 1; //generate the [1...n] numbers
-    int ret = 1;
-    for(int i=1;i<n;++i) //vec[0] = 1, we can ignore
-    {
-        for(int j = i+1; j < n ; ++j)
+        int minMultiply(const int n)
         {
-            if(vec[j] % vec[i] == 0) vec[j] /= vec[i];
+            if(n <= 2) return n;
+            vector<int> vec(n,0);
+            for(int i=0;i<n;++i) vec[i] = i + 1; //generate the [1...n] numbers
+            int ret = 1;
+            for(int i=1;i<n;++i) //vec[0] = 1, we can ignore
+            {
+                for(int j = i+1; j < n ; ++j)
+                {
+                    if(vec[j] % vec[i] == 0) vec[j] /= vec[i];
+                }
+                ret *= vec[i];
+            }
+            return ret;
         }
-        ret *= vec[i];
-    }
-    return ret;
-}
 ```
 
 ## T15：最长回文
-直接上manacher算法吧，其他的算法见博客http://blog.csdn.net/xuqingict/article/details/39718893
-代码为：
+        直接上manacher算法吧，其他的算法见博客http://blog.csdn.net/xuqingict/article/details/39718893
+        代码为：
 ```
- string Manacher(const string &s)
-{
-    cout << "enter..." << endl;
-    const int n = s.size();
-    string tmp;
-    tmp += '$';
-    for(auto a : s){tmp += '#'; tmp += a;}
-    tmp += '#';
-    cout << tmp << endl;
-    const int m = tmp.size();
-    vector<int> P(m,0);
-    int idx = -1, right = -1;
-    for(int i=1;i<m;++i)
-    {
-        P[i] = (i < right)?(min(P[2*idx-i],right-i)):1;
-        while(tmp[i+P[i]] == tmp[i-P[i]]) P[i]++;
-        if(i + P[i] > right)
+        string Manacher(const string &s)
         {
-            right = i + P[i];
-            idx = i;
+            cout << "enter..." << endl;
+            const int n = s.size();
+            string tmp;
+            tmp += '$';
+            for(auto a : s){tmp += '#'; tmp += a;}
+            tmp += '#';
+            cout << tmp << endl;
+            const int m = tmp.size();
+            vector<int> P(m,0);
+            int idx = -1, right = -1;
+            for(int i=1;i<m;++i)
+            {
+                P[i] = (i < right)?(min(P[2*idx-i],right-i)):1;
+                while(tmp[i+P[i]] == tmp[i-P[i]]) P[i]++;
+                if(i + P[i] > right)
+                {
+                    right = i + P[i];
+                    idx = i;
+                }
+            }
+            auto pos = max_element(P.begin(),P.end());
+            int len = *pos-1;
+            string ret;
+            int i = pos-P.begin();
+            ret += tmp[i];
+            cout << "middle : " << ret << endl;
+            int k = 1;
+            //consrtruct the palindrome
+            while(len)
+            {
+                ret += tmp[i+k];
+                ret = tmp[i-k] + ret;
+                --len;
+                ++k;
+            }
+            //trim '#'
+            k = 0;
+            for(auto a: ret)
+                if(a != '#') ret[k++] = a;
+            ret.resize(k);
+            return ret;
         }
-    }
-    auto pos = max_element(P.begin(),P.end());
-    int len = *pos-1;
-    string ret;
-    int i = pos-P.begin();
-    ret += tmp[i];
-    cout << "middle : " << ret << endl;
-    int k = 1;
-    //consrtruct the palindrome
-    while(len)
-    {
-        ret += tmp[i+k];
-        ret = tmp[i-k] + ret;
-        --len;
-        ++k;
-    }
-    //trim '#'
-    k = 0;
-    for(auto a: ret)
-        if(a != '#') ret[k++] = a;
-    ret.resize(k);
-    return ret;
-}
 ```
 
 ## T16 : 丢失的数字
 ### 给定一个无序的整数数组，怎么找到第一个大于0，并且不在此数组的整数。比如[1,2,0] 返回 3, [3,4,-1,1] 返回 2。最好能O(1)空间和O(n)时间
 ```
-//A[i] 保存的是 （i+1）的值！！
-int firstMissingDigit(vector<int> &A) {
-    const int n = A.size();
-    for(int i=0;i<n;++i)
-    {
-        while(A[i] != (i+1))
-        {
-            //如果A[i]的范围不是[1,n-1]内部的话，那么不能直接操作!!!
-            if(A[i] < 1 || A[i] >= n || A[i] == A[A[i]-1]) break;
-            swap(A[i],A[A[i]-1]);
+        //A[i] 保存的是 （i+1）的值！！
+        int firstMissingDigit(vector<int> &A) {
+            const int n = A.size();
+            for(int i=0;i<n;++i)
+            {
+                while(A[i] != (i+1))
+                {
+                    //如果A[i]的范围不是[1,n-1]内部的话，那么不能直接操作!!!
+                    if(A[i] < 1 || A[i] >= n || A[i] == A[A[i]-1]) break;
+                    swap(A[i],A[A[i]-1]);
+                }
+            }
+            for(int i=0;i<n;++i)if(A[i] != (i+1)) return (i+1);
+            return n+1;
         }
-    }
-    for(int i=0;i<n;++i)if(A[i] != (i+1)) return (i+1);
-    return n+1;
-}
 ```
 ## T17 : 给定字符串，输出括号是否匹配，例如，
 
-"()" yes；
-")(" no；
-"(abcd(e)" no；
-"(a)(b)" yes。
+        "()" yes；
+        ")(" no；
+        "(abcd(e)" no；
+        "(a)(b)" yes。
 ### 题目描述很简单，要求使用递归来写。不能出现循环语句。
-代码为：
+        代码为：
 ```
-bool valid(const string &s)
-{
-    if(s.empty()) return true;
-    const int n = s.size();
-    if(n < 2) return false;
-    stack<char> left;
-    for(auto a : s)
+        bool valid(const string &s)
+        {
+            if(s.empty()) return true;
+            const int n = s.size();
+            if(n < 2) return false;
+            stack<char> left;
+            for(auto a : s)
+            {
+                if(a != '(' && a != ')') continue;
+                if(a == '(') left.push(a);
+                else
+                {
+                    if(left.empty()) return false;
+                    left.pop();
+                }
+            }
+            return left.empty();
+        }
+    bool helper(const string &s, const int  idx, const int max_index, int &left)
     {
-        if(a != '(' && a != ')') continue;
-        if(a == '(') left.push(a);
+        if(s[idx] != '(' && s[idx] != ')')  return helper(s,idx+1,max_index,left);
+        if(idx > max_index) return left == 0;
+        if(s[idx] == '(')
+        {
+            ++left;
+        }
         else
         {
-            if(left.empty()) return false;
-            left.pop();
+            if(left == 0) return false;
+            --left;
         }
+        return helper(s,idx+1,max_index,left);
     }
-    return left.empty();
-}
-bool helper(const string &s, const int  idx, const int max_index, int &left)
-{
-    if(s[idx] != '(' && s[idx] != ')')  return helper(s,idx+1,max_index,left);
-    if(idx > max_index) return left == 0;
-    if(s[idx] == '(')
-    {
-        ++left;
-    }
-    else
-    {
-        if(left == 0) return false;
-        --left;
-    }
-    return helper(s,idx+1,max_index,left);
-}
 
-bool valid_2(const string &s)
-{
-    const int n = s.size();
-    int left = 0;
-    bool ret = helper(s,0,n-1,left);
-    return ret;
-}
+    bool valid_2(const string &s)
+    {
+        const int n = s.size();
+        int left = 0;
+        bool ret = helper(s,0,n-1,left);
+        return ret;
+    }
 ```
 ## T18 : 对一个字符串按照回文进行分割，例如aba|b|bbabb|a|b|aba就是字符串ababbbabbababa的一个回文分割，每一个字串都是一个回文。请找到可以分割的最少的字串数
- ### 代码为：
+### 代码为：
 ```
-    int minCut(string s) {
-        const int n = s.size();
-        if(n < 2) return 0; //if length < 2. return 0 directly.
-        vector<vector<bool> > f(n,vector<bool>(n,false)); //f[i...j] means whether the s[i...j] is palindrome or not.
-        for(int i=n-1;i>=0;--i)
-        {
-            f[i][i] = true;
-            for(int j=i+1;j<n;++j)
+        int minCut(string s) {
+            const int n = s.size();
+            if(n < 2) return 0; //if length < 2. return 0 directly.
+            vector<vector<bool> > f(n,vector<bool>(n,false)); //f[i...j] means whether the s[i...j] is palindrome or not.
+            for(int i=n-1;i>=0;--i)
             {
-                if(i+1 == j) f[i][j] = (s[i] == s[j]);
-                else f[i][j] = (f[i+1][j-1] && s[i] == s[j]);
+                f[i][i] = true;
+                for(int j=i+1;j<n;++j)
+                {
+                    if(i+1 == j) f[i][j] = (s[i] == s[j]);
+                    else f[i][j] = (f[i+1][j-1] && s[i] == s[j]);
+                }
             }
-        }
 
-        vector<int> g(n+1,0);   //g[i] means the minimum cut number of patitioning s[0...i-1].
-        g[0] = -1;
-        //previous i chars
-        for(int i=2;i<n+1;++i)
-        {
-            g[i] = i-1;
-            for(int j=0;j<i;++j) // j is also length.
-                if(f[j][i-1]) g[i] = min(g[i],g[j]+1);
+            vector<int> g(n+1,0);   //g[i] means the minimum cut number of patitioning s[0...i-1].
+            g[0] = -1;
+            //previous i chars
+            for(int i=2;i<n+1;++i)
+            {
+                g[i] = i-1;
+                for(int j=0;j<i;++j) // j is also length.
+                    if(f[j][i-1]) g[i] = min(g[i],g[j]+1);
+            }
+            return g[n];
         }
-        return g[n];
-    }
 ```
 ## T19 : 数字翻译
 ###  翻译数字串，类似于电话号码翻译：给一个数字串，比如12259，映射到字母数组，比如，1 -> a， 2-> b，... ， 12 -> l ，... 26-> z。那么，12259 -> lyi 或 abbei 或 lbei 或 abyi。输入一个数字串，判断是否能转换成字符串，如果能，则打印所以有可能的转换成的字符串。动手写写吧。
-代码为：
+        代码为：
 ```
-char dict[27];
+        char dict[27];
 
-ostream_iterator<char> out(cout,"\t");
+    ostream_iterator<char> out(cout,"\t");
 
-//can be translated or not
-bool translated(const string &s)
-{
-    const int n  = s.size();
-    if(n == 0 ) return true;
-    vector<bool> f(n+1,false);
-    f[0] = true;
-    f[1] = (s[0] != '0');
-    for(int i=2;i<=n;++i) // length
+    //can be translated or not
+    bool translated(const string &s)
     {
-        int tmp = atoi(s.substr(i-2,2).c_str());
-        f[i] = (f[i-1] && s[i-1] != '0') || (f[i-2] && (tmp >=10 && tmp <= 26));
+        const int n  = s.size();
+        if(n == 0 ) return true;
+        vector<bool> f(n+1,false);
+        f[0] = true;
+        f[1] = (s[0] != '0');
+        for(int i=2;i<=n;++i) // length
+        {
+            int tmp = atoi(s.substr(i-2,2).c_str());
+            f[i] = (f[i-1] && s[i-1] != '0') || (f[i-2] && (tmp >=10 && tmp <= 26));
+        }
+        return f[n];
     }
-    return f[n];
-}
-//the number of decode ways
+    //the number of decode ways
     bool valid(const string &s)
     {
         int t = atoi(s.c_str());
@@ -671,118 +677,118 @@ bool translated(const string &s)
         return f[n];
     }
 
-//dfs to print all result
-void helper( const string &s, int cur_index, const int max_index, string cur, vector<string> &ret)
-{
-    if(cur_index > max_index) {ret.push_back(cur); return ;}
-    //one digit
-    if(s[cur_index] == '0') return; //illegal
-    cur += dict[s[cur_index]-'0'];
-    helper(s,cur_index+1,max_index,cur,ret);
-    cur.pop_back();
-    //two digit
-    int tmp=atoi(s.substr(cur_index,2).c_str());
-    if(tmp >= 10 && tmp <= 26)
+    //dfs to print all result
+    void helper( const string &s, int cur_index, const int max_index, string cur, vector<string> &ret)
     {
-        cur += dict[tmp];
-        helper(s,cur_index+2,max_index,cur,ret);
-    }
-}
-vector<string> helper(const string &s)
-{
-    const int  n = s.size();
-    if(n == 0 ) return vector<string>();
-    vector<string> ret;
-    string cur;
-    helper(s,0,n-1,cur,ret);
-    return ret;
-}
-
-void print(const string &s , int cur_index, string &cur, vector<string> &ret, const vector<vector<int> > parent)
-{
-    if(cur_index == 0) {reverse(cur.begin(),cur.end());ret.push_back(cur);return;}
-    string tmp = cur;
-    for(auto idx : parent[cur_index])
-    {
-        cur = tmp;
-        //cur = s.substr(idx,cur_index-idx) + cur;
-        int t = atoi(s.substr(idx,cur_index-idx).c_str());
-        cur += dict[t];
-        print(s,idx,cur,ret,parent);
-    }
-}
-
-//DP to record the parent of each position(at least two parent...)
-vector<string> printAll(const string &s)
-{
-    const int n = s.size();
-    if(n == 0) return vector<string>();
-    vector<vector<int> > f(n+1,vector<int>()); //record the parent of each solution
-    //f[i] :  the last index of s[i-1]
-    vector<bool> g(n+1,false);
-    g[0] = true;
-    g[1] = (s[0] != '0');
-    f[1].push_back(0);
-    for(int i=2;i<=n;++i)
-    {
+        if(cur_index > max_index) {ret.push_back(cur); return ;}
         //one digit
-        if(g[i-1] && s[i-1] != '0')
-        {
-            g[i] = true;
-            f[i].push_back(i-1);
-        }
-
+        if(s[cur_index] == '0') return; //illegal
+        cur += dict[s[cur_index]-'0'];
+        helper(s,cur_index+1,max_index,cur,ret);
+        cur.pop_back();
         //two digit
-        int tmp = atoi(s.substr(i-2,2).c_str());
-        if( g[i-2] && (tmp >= 10 && tmp <= 26))
+        int tmp=atoi(s.substr(cur_index,2).c_str());
+        if(tmp >= 10 && tmp <= 26)
         {
-            g[i] = true;
-            f[i].push_back(i-2);
+            cur += dict[tmp];
+            helper(s,cur_index+2,max_index,cur,ret);
         }
     }
-    for(int i=0;i<f.size();++i)
+    vector<string> helper(const string &s)
     {
-        for(auto a: f[i])
-            cout << a << " ";
-        cout << endl;
+        const int  n = s.size();
+        if(n == 0 ) return vector<string>();
+        vector<string> ret;
+        string cur;
+        helper(s,0,n-1,cur,ret);
+        return ret;
     }
-    vector<string> ret;
-    string cur;
-    print(s,n,cur,ret,f);
-    return ret;
-}
+
+    void print(const string &s , int cur_index, string &cur, vector<string> &ret, const vector<vector<int> > parent)
+    {
+        if(cur_index == 0) {reverse(cur.begin(),cur.end());ret.push_back(cur);return;}
+        string tmp = cur;
+        for(auto idx : parent[cur_index])
+        {
+            cur = tmp;
+            //cur = s.substr(idx,cur_index-idx) + cur;
+            int t = atoi(s.substr(idx,cur_index-idx).c_str());
+            cur += dict[t];
+            print(s,idx,cur,ret,parent);
+        }
+    }
+
+    //DP to record the parent of each position(at least two parent...)
+    vector<string> printAll(const string &s)
+    {
+        const int n = s.size();
+        if(n == 0) return vector<string>();
+        vector<vector<int> > f(n+1,vector<int>()); //record the parent of each solution
+        //f[i] :  the last index of s[i-1]
+        vector<bool> g(n+1,false);
+        g[0] = true;
+        g[1] = (s[0] != '0');
+        f[1].push_back(0);
+        for(int i=2;i<=n;++i)
+        {
+            //one digit
+            if(g[i-1] && s[i-1] != '0')
+            {
+                g[i] = true;
+                f[i].push_back(i-1);
+            }
+
+            //two digit
+            int tmp = atoi(s.substr(i-2,2).c_str());
+            if( g[i-2] && (tmp >= 10 && tmp <= 26))
+            {
+                g[i] = true;
+                f[i].push_back(i-2);
+            }
+        }
+        for(int i=0;i<f.size();++i)
+        {
+            for(auto a: f[i])
+                cout << a << " ";
+            cout << endl;
+        }
+        vector<string> ret;
+        string cur;
+        print(s,n,cur,ret,f);
+        return ret;
+    }
 ```
 ## T20：糖果问题
 ### Description : N个孩子站成一排，每个人分给一个权重。按照如下的规则分配糖果：
-每个孩子至少有一个糖果
-所分配权重较高的孩子，会比他的邻居获得更多的糖果
-问题是，最少需要多少个糖果？
+        每个孩子至少有一个糖果
+        所分配权重较高的孩子，会比他的邻居获得更多的糖果
+        问题是，最少需要多少个糖果？
 ### 权重的分布一定是一个折线（直线是特殊的折线），那么波谷的孩子分得的糖果一定是1，他旁边比他高的依次加1即可。但是需要考虑到**来自左右两边的约束**。那么扫描数组两边，因为每一个孩子分得的糖果数是取决于他的左右两个孩子的。
 
-代码为：
+        代码为：
 ```
-int minCandy(const vector<int> &A)
-{
-    const int n = A.size();
-    if(n < 2) return n;
-    vector<int> l(n,0),r(n,0);
-    l[0]=1;
-    for(int i=1;i<n;++i)
-    {
-        if(A[i]>A[i-1]) l[i] = l[i-1]+1;
-        else l[i]=1;
-    }
-    r[n-1]=1;
-    for(int i=n-2;i>=0;--i)
-    {
-        if(A[i] > A[i+1])r[i] = r[i+1]+1;
-        else r[i]=1;
-    }
+        int minCandy(const vector<int> &A)
+        {
+            const int n = A.size();
+            if(n < 2) return n;
+            vector<int> l(n,0),r(n,0);
+            l[0]=1;
+            for(int i=1;i<n;++i)
+            {
+                if(A[i]>A[i-1]) l[i] = l[i-1]+1;
+                else l[i]=1;
+            }
+            r[n-1]=1;
+            for(int i=n-2;i>=0;--i)
+            {
+                if(A[i] > A[i+1])r[i] = r[i+1]+1;
+                else r[i]=1;
+            }
 
-    int ret=0;
-    for(int i=0;i<n;++i)ret+=max(l[i],r[i]);
-    return ret;
-}
+            int ret=0;
+            for(int i=0;i<n;++i)ret+=max(l[i],r[i]);
+            return ret;
+        }
 ```
 
 ## T21：分词问题
@@ -790,150 +796,150 @@ int minCandy(const vector<int> &A)
 #### DP求解即可。
 #### 代码为：
 ```
-bool dictPartition(const string &s,const unordered_set<string> &dict)
-{
-    const int n = s.size();
-    if(n == 0) return false;
-    vector<bool> f(n+1,false);
-    f[0]=true;
-    for(int i=1; i<=n;++i) //len
-    {
-        for(int j=0;j<i;++j)
+        bool dictPartition(const string &s,const unordered_set<string> &dict)
         {
-            auto it = dict.find(s.substr(j,i-j));
-            if(f[j] && it != dict.end()) {f[i]=true;break;}
+            const int n = s.size();
+            if(n == 0) return false;
+            vector<bool> f(n+1,false);
+            f[0]=true;
+            for(int i=1; i<=n;++i) //len
+            {
+                for(int j=0;j<i;++j)
+                {
+                    auto it = dict.find(s.substr(j,i-j));
+                    if(f[j] && it != dict.end()) {f[i]=true;break;}
+                }
+            }
+            return f[n];
         }
-    }
-    return f[n];
-}
 ```
 ## T22：LIS 最大独立子集
 ###  含义如下：给定一棵二叉树，找到满足如下条件的最大节点集合：集合中的任意两个节点之间，都没有边。
 #### DP，跟最大娱乐值的那题很像。定义递推式： f[x] : 以x节点为根节点的子树的最大独立集（包含x）。 g[x]: 以x为根节点的子树的最大独立集（不包含x）.
 #### 注意题目中的最大独立集应该指的是独立集的元素的和，而不是个数，如果是个数的话，那么也是可以解的，每个节点的值是1就对了。
-代码为：
+        代码为：
 ```
-struct fg
-{
-    int f;
-    int g;
-    fg(int _f=0,int _g=0):f(_f),g(_g){}
-}; // f : include x, g: exclude x
+        struct fg
+        {
+            int f;
+            int g;
+            fg(int _f=0,int _g=0):f(_f),g(_g){}
+        }; // f : include x, g: exclude x
 
-void helper(TreeNode *root, unordered_map<TreeNode *,fg> & exist, int &cnt)
-{
-    if(root == nullptr || exist.find(root) != exist.end()) return;
-    if(exist.find(root->left) == exist.end())
-        helper(root->left,exist,cnt);
-    if(exist.find(root->right) == exist.end())
-        helper(root->right,exist,cnt);
-    //contain x
-    assert(exist.find(root->left) != exist.end());
-    assert(exist.find(root->right) != exist.end());
-    fg l = exist[root->left];
-    fg r = exist[root->right];
-    int f = root->val + l.g + r.g;
-    int g = max(l.f,l.g) + max(r.f,r.g);
-    if(f > g) ++cnt;
-    exist.insert(make_pair(root,fg(f,g)));
-}
+    void helper(TreeNode *root, unordered_map<TreeNode *,fg> & exist, int &cnt)
+    {
+        if(root == nullptr || exist.find(root) != exist.end()) return;
+        if(exist.find(root->left) == exist.end())
+            helper(root->left,exist,cnt);
+        if(exist.find(root->right) == exist.end())
+            helper(root->right,exist,cnt);
+        //contain x
+        assert(exist.find(root->left) != exist.end());
+        assert(exist.find(root->right) != exist.end());
+        fg l = exist[root->left];
+        fg r = exist[root->right];
+        int f = root->val + l.g + r.g;
+        int g = max(l.f,l.g) + max(r.f,r.g);
+        if(f > g) ++cnt;
+        exist.insert(make_pair(root,fg(f,g)));
+    }
 
-int maxLIS(TreeNode *root)
-{
-    if(root == nullptr) return 0;
-    unordered_map<TreeNode*,fg> exist;
-    int cnt = 0; //record the size of LIS set
-    exist.insert(make_pair(nullptr,fg(0,0)));
-    helper(root,exist,cnt);
-    int ret = max(exist[root].f, exist[root].g);
-    cout << "size : " << cnt << endl;
-    return ret;
-}
+    int maxLIS(TreeNode *root)
+    {
+        if(root == nullptr) return 0;
+        unordered_map<TreeNode*,fg> exist;
+        int cnt = 0; //record the size of LIS set
+        exist.insert(make_pair(nullptr,fg(0,0)));
+        helper(root,exist,cnt);
+        int ret = max(exist[root].f, exist[root].g);
+        cout << "size : " << cnt << endl;
+        return ret;
+    }
 ```
 ## T23：拷贝链表
-有一个链表，每一个节点除了next指针指向一下节点以外，又多出了一个指针random，指向链表中的任何一个节点，包括null。请给出方法完成链表的深拷贝。
-代码为：
+        有一个链表，每一个节点除了next指针指向一下节点以外，又多出了一个指针random，指向链表中的任何一个节点，包括null。请给出方法完成链表的深拷贝。
+        代码为：
 ```
 
-ListNode *copyList(ListNode *head)
-{
-    if(head == nullptr) return nullptr;
-    //copy node and insert
-    ListNode *tmp = head;
-    while(tmp)
-    {
-        ListNode *node = new ListNode(tmp->val);
-        node->next = tmp->next;
-        tmp->next = node;
-        tmp = node->next;
-    }
-    //copy random node
-    tmp = head;
-    while(tmp)
-    {
-        if(tmp->random) tmp->next->random = tmp->random->next;
-        tmp = tmp->next->next;
-    }
-    //split
-    ListNode dummy(0);
-    ListNode *new_head = &dummy;
-    tmp = head;
-    while(tmp)
-    {
-        new_head->next = tmp->next;
-        tmp->next = tmp->next->next;
-        new_head = new_head->next;
-        new_head->next = nullptr;
-        tmp = tmp->next;
-    }
-    return dummy.next;
-}
+        ListNode *copyList(ListNode *head)
+        {
+            if(head == nullptr) return nullptr;
+            //copy node and insert
+            ListNode *tmp = head;
+            while(tmp)
+            {
+                ListNode *node = new ListNode(tmp->val);
+                node->next = tmp->next;
+                tmp->next = node;
+                tmp = node->next;
+            }
+            //copy random node
+            tmp = head;
+            while(tmp)
+            {
+                if(tmp->random) tmp->next->random = tmp->random->next;
+                tmp = tmp->next->next;
+            }
+            //split
+            ListNode dummy(0);
+            ListNode *new_head = &dummy;
+            tmp = head;
+            while(tmp)
+            {
+                new_head->next = tmp->next;
+                tmp->next = tmp->next->next;
+                new_head = new_head->next;
+                new_head->next = nullptr;
+                tmp = tmp->next;
+            }
+            return dummy.next;
+        }
 ```
 ## T24：城市的环形路有n个加油站，第i个加油站的油量用gas[i]来表示，你有如下的一辆车：
-它的油缸是无限量的，初始是空的
-它从第i个加油站到第i+1个加油站消耗油量为cost[i]
-现在你可以从任意加油站开始，路过加油站可以不断的加油，问是否能够走完环形路。如果可以返回开始加油站的编号，如果不可以返回-1。注意，解决方案保证是唯一的。
+        它的油缸是无限量的，初始是空的
+        它从第i个加油站到第i+1个加油站消耗油量为cost[i]
+        现在你可以从任意加油站开始，路过加油站可以不断的加油，问是否能够走完环形路。如果可以返回开始加油站的编号，如果不可以返回-1。注意，解决方案保证是唯一的。
 ### Observation：
 ####  如果说从某一个点i出发， 在点k处出现了油不足的情况，那么在［i，k］之间的所有的点都是不满足条件的。
 #### 如果说消耗的油的总量大于加油站的油的储量，那么很显然不存在这样的点；下面这句很重要，如果说油的储量大于油的消耗量，那么一定存在这样的点。（这句需要好好理解，可用反证法来证明）。
-代码为：
+        代码为：
 ```
-    int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
-        const int n = gas.size();
-        assert(n == cost.size());
-        int global = 0 ; //record the diff between cost and gas
-        int start = 0 ; // start index
-        int cur = 0 ; //current gas
-        for(int i = 0; i<n; ++i)
-        {
-            cur += (gas[i]-cost[i]);
-            global += (gas[i] - cost[i]);
-            if(cur < 0)
+        int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
+            const int n = gas.size();
+            assert(n == cost.size());
+            int global = 0 ; //record the diff between cost and gas
+            int start = 0 ; // start index
+            int cur = 0 ; //current gas
+            for(int i = 0; i<n; ++i)
             {
-                start = i+1;
-                cur = 0;
+                cur += (gas[i]-cost[i]);
+                global += (gas[i] - cost[i]);
+                if(cur < 0)
+                {
+                    start = i+1;
+                    cur = 0;
+                }
             }
+            return (global<0)?(-1):(start);
         }
-        return (global<0)?(-1):(start);
-    }
 ```
 
 ## T25 : 最大乘积
 ### Description :  一根绳子，长度为n米。将其切成几段，每一段的长度都是整数。请给出一种切法，使得切成的各段绳子之间的乘积是最大的。注意，最少要切一下的。
 ```
-int maxCutLen(const int n)
-{
-    if(n <= 0 )return 0;
-    if(n == 1) return 0; //illegal input
-    vector<int> f(n+1,0); //f[i]: 长度为i的绳子至少切一刀的最长的长度。
-    f[0] = 0;
-    f[1] = 1;
-    f[2] = 1;
-    for(int i=3;i<=n;++i) //length
-        for(int j=1;j<=i/2;++j) // enumerate the length of the first segment
-            f[i] = max(f[i],max(j*f[i-j], (i-j)*j)); // (j-i)*j : cut once
-    return f[n];
-}
+        int maxCutLen(const int n)
+        {
+            if(n <= 0 )return 0;
+            if(n == 1) return 0; //illegal input
+            vector<int> f(n+1,0); //f[i]: 长度为i的绳子至少切一刀的最长的长度。
+            f[0] = 0;
+            f[1] = 1;
+            f[2] = 1;
+            for(int i=3;i<=n;++i) //length
+                for(int j=1;j<=i/2;++j) // enumerate the length of the first segment
+                    f[i] = max(f[i],max(j*f[i-j], (i-j)*j)); // (j-i)*j : cut once
+            return f[n];
+        }
 ```
 
 #### 只需要**将长度n表示为3x+2y=n**，并且3尽可能的多，这样的3^x+2^y是最大的。不得不赞叹，这确实是一个很巧妙的方法。大家可以通过例子，验证几个。为什么只有3和2呢？长度为4的，就是2×2，5以上的，都可以分解为3x+2y，并且3^x+2^y>5以上的数字。这个题目要求是整数，如果取消这个限制呢？
@@ -942,7 +948,7 @@ int maxCutLen(const int n)
 ###  输入数字组成的字符串，取k切分后的最大K乘积
 ### 例如： 如“123”切为2分，则两项最大乘积是12 * 3 = 36
 
-代码为：
+        代码为：
 
 ```
 
@@ -951,26 +957,26 @@ int maxCutLen(const int n)
 ## T27: 最少插入字符
 ### 给定字符串，可以通过插入字符，使其变为回文。求最少插入字符的数量
 
-代码为：
+        代码为：
 
 ```
-int minInsert(const string &s)
-{
-    const int n = s.size();
-    if(n < 2) return 0;
-    vector<int> prev(n,0), next(n,0);
-    for(int i=n-1;i>=0;--i)
-    {
-        for(int j=i+1;j<n;++j)
+        int minInsert(const string &s)
         {
-            next[j] = min(prev[j],next[j-1]) + 1;
-            if(s[i] == s[j]) { next[j] = min(next[j],prev[j-1]);}
+            const int n = s.size();
+            if(n < 2) return 0;
+            vector<int> prev(n,0), next(n,0);
+            for(int i=n-1;i>=0;--i)
+            {
+                for(int j=i+1;j<n;++j)
+                {
+                    next[j] = min(prev[j],next[j-1]) + 1;
+                    if(s[i] == s[j]) { next[j] = min(next[j],prev[j-1]);}
 
+                }
+                prev.swap(next);
+            }
+            return prev[n-1];
         }
-        prev.swap(next);
-    }
-    return prev[n-1];
-}
 ```
 
 ## T28：数对数目
@@ -978,175 +984,175 @@ int minInsert(const string &s)
 #### x^y > y^x，即x的y次方>y的x次方
 #### x来自X数组，y来自Y数组
 
-对于这样的指数的运算，我们首先想到的是化简，那么取log是化简指数运算的利器。
-两边同时取对数有： 对于式子:  **ylog(x)>xlog(y)，x和y都是正数，则进一步有：两边同时除以xy，则：log(x)/x >log(y)/y。** 这个式子，看起来也复杂，但是，x和y都在各自的一边，要简单的多。
+        对于这样的指数的运算，我们首先想到的是化简，那么取log是化简指数运算的利器。
+        两边同时取对数有： 对于式子:  **ylog(x)>xlog(y)，x和y都是正数，则进一步有：两边同时除以xy，则：log(x)/x >log(y)/y。** 这个式子，看起来也复杂，但是，x和y都在各自的一边，要简单的多。
 ### Algorithm：
-+ 数组X与Y分别计算logx/x和logy/y。然后排序，再对于每一个x，在Y中进行二分查找，从而得到比该数字小的位置，然后输出即可
+        + 数组X与Y分别计算logx/x和logy/y。然后排序，再对于每一个x，在Y中进行二分查找，从而得到比该数字小的位置，然后输出即可
 
-代码为：
+        代码为：
 
 ```
-int numPair(const vector<int> &A, const vector<int> &B)
-{
-    const int m = A.size(), n = B.size();
-    if (m == 0  || n == 0) return 0;
-    vector<double> tA (m,0), tB(n,0);
-    for(int i=0;i<m;++i)
-        tA[i] = log(A[i])/A[i];
-    for(int i=0;i<n;++i)
-        tB[i] = log(B[i])/B[i];
-    sort(tA.begin(),tA.end());
-    sort(tB.begin(),tB.end());
+        int numPair(const vector<int> &A, const vector<int> &B)
+        {
+            const int m = A.size(), n = B.size();
+            if (m == 0  || n == 0) return 0;
+            vector<double> tA (m,0), tB(n,0);
+            for(int i=0;i<m;++i)
+                tA[i] = log(A[i])/A[i];
+            for(int i=0;i<n;++i)
+                tB[i] = log(B[i])/B[i];
+            sort(tA.begin(),tA.end());
+            sort(tB.begin(),tB.end());
 
-    //count
-    int ret = 0;
-    for(auto a: tA)
-    {
-        auto it = upper_bound(tB.begin(),tB.end(),a);
-        ret += (it-tB.begin());
-    }
-    return ret;
-}
+            //count
+            int ret = 0;
+            for(auto a: tA)
+            {
+                auto it = upper_bound(tB.begin(),tB.end(),a);
+                ret += (it-tB.begin());
+            }
+            return ret;
+        }
 ```
 
 ### 补充： lower_bound 与 upper_bound的代码：
 
 ```
-    template<class ForwardIterator, typename T>
-    ForwardIterator my_lower_bound(ForwardIterator first, ForwardIterator last, T target)
-    {
-        while(first != last)
+        template<class ForwardIterator, typename T>
+        ForwardIterator my_lower_bound(ForwardIterator first, ForwardIterator last, T target)
         {
-            ForwardIterator mid = first + (last-first)/2;
-            if(target > *mid) first = mid+1;
-            else last=mid;
+            while(first != last)
+            {
+                ForwardIterator mid = first + (last-first)/2;
+                if(target > *mid) first = mid+1;
+                else last=mid;
+            }
+            return first;
         }
-        return first;
-    }
 
     template<class ForwardIterator , typename T>
-    ForwardIterator my_upper_bound(ForwardIterator first, ForwardIterator last, T target)
-    {
-        while(first != last)
+        ForwardIterator my_upper_bound(ForwardIterator first, ForwardIterator last, T target)
         {
-            ForwardIterator mid=first + (last-first)/2;
-            if(target >= *mid) first=mid+1;
-            else last=mid;
+            while(first != last)
+            {
+                ForwardIterator mid=first + (last-first)/2;
+                if(target >= *mid) first=mid+1;
+                else last=mid;
+            }
+            return first;
         }
-        return first;
-    }
 ```
 
 ## T29 ： 谁多谁少
 ### 盒子A有10个红球，盒子B有10个绿球。进行如下的操作：
-+ 随机从A中拿三个球放入B中
-+ 随机从B中拿三个球放入A中
+        + 随机从A中拿三个球放入B中
+        + 随机从B中拿三个球放入A中
 
 ### 问题是，在哪一个盒子中，会出现一个颜色的球比另一个颜色的球更多？该如何分析？
-首先这个题目的目标大家理解了么？这里有个小坑。两个盒子，肯定都是一种颜色的球比另一种颜色的球多，但是哪个更多呢？关键在这个“更”字，直接上，感觉是B的同学，也是对“更”字的关注不够。
+        首先这个题目的目标大家理解了么？这里有个小坑。两个盒子，肯定都是一种颜色的球比另一种颜色的球多，但是哪个更多呢？关键在这个“更”字，直接上，感觉是B的同学，也是对“更”字的关注不够。
 
-仔细、逐步分析，让我们看看实际是什么样的：第一步，从A中，随机选择三个红球放入B中，这里没有什么变数。看第二步：从B中，取三个球，放入A中。那么有多少个红球被拿到A中呢？
+        仔细、逐步分析，让我们看看实际是什么样的：第一步，从A中，随机选择三个红球放入B中，这里没有什么变数。看第二步：从B中，取三个球，放入A中。那么有多少个红球被拿到A中呢？
 
-所以，最终的答案是一样最多的，**没有哪个盒子里是更多的**.
+        所以，最终的答案是一样最多的，**没有哪个盒子里是更多的**.
 
-|  B中拿出红球个数   |  A中情况  | B中情况	 |  哪个更多  |
-| ------------- |:-------------:| ---------:| -----------:|
-|  0 | 7红球，3绿球	| 7绿球，3红球	 |  一样多 |
-|  1 | 8红球，2绿球	| 8绿球，2红球	 |  一样多 |
-|  2 | 9红球，1绿球	| 9绿球，1红球	 |  一样多 |
-|  3 | 10红球，0绿球	| 10绿球，0红球 | 	一样多 |
+        |  B中拿出红球个数   |  A中情况  | B中情况	 |  哪个更多  |
+        | ------------- |:-------------:| ---------:| -----------:|
+        |  0 | 7红球，3绿球	| 7绿球，3红球	 |  一样多 |
+        |  1 | 8红球，2绿球	| 8绿球，2红球	 |  一样多 |
+        |  2 | 9红球，1绿球	| 9绿球，1红球	 |  一样多 |
+        |  3 | 10红球，0绿球	| 10绿球，0红球 | 	一样多 |
 
 ## T30 : 选择旅游国家
 ### 有一个待选国家的列表，以及国家的相对热门程度，请给出一个算法，随机选择一个国家，并且保证，越是热门的国家，随机选择它的可能性就越高。
-每当我们遇到一个题目的时候，都要对题目进行充分的理解，有哪些条件，目标是什么。这个题目看完之后，我们能够得到两个要点：
+        每当我们遇到一个题目的时候，都要对题目进行充分的理解，有哪些条件，目标是什么。这个题目看完之后，我们能够得到两个要点：
 
-随机选择一个国家
-越是热门，选择的可能性、概率就越高
-我们怎么做到这个呢？如何充分理解这个呢？还是通过一个例子来进行：
+        随机选择一个国家
+        越是热门，选择的可能性、概率就越高
+        我们怎么做到这个呢？如何充分理解这个呢？还是通过一个例子来进行：
 
-|国家|	A|B|C|D|
-|---|--|--|--|--|
-|热度	|1	|2	|5	|2|
-随机选择一个国家，意味着，如果热度相同，则被选择的概率是相同的，更进一步，都可以表示为2/10。依次类推，A被选择的概率是1/10，热度最小，则概率最小。并且，概率之间的比，和热度之间的比是相同的。
+        |国家|	A|B|C|D|
+        |---|--|--|--|--|
+        |热度	|1	|2	|5	|2|
+        随机选择一个国家，意味着，如果热度相同，则被选择的概率是相同的，更进一步，都可以表示为2/10。依次类推，A被选择的概率是1/10，热度最小，则概率最小。并且，概率之间的比，和热度之间的比是相同的。
 
-那么，我们以怎么样的方法，来保证，选择A的概率是1/10，B和D的概率是2/10，C的概率是5/10？我们稍作变换，将上面的表格，转换为如下的表格：
+        那么，我们以怎么样的方法，来保证，选择A的概率是1/10，B和D的概率是2/10，C的概率是5/10？我们稍作变换，将上面的表格，转换为如下的表格：
 
-|A|B|B|C|C|C|C|C|D|D|
-|--|--|--|--|--|--|--|--|--|--|
+        |A|B|B|C|C|C|C|C|D|D|
+        |--|--|--|--|--|--|--|--|--|--|
 
-我们只要保证，选择上面表格中每一个元素的概率是相同的，就可以得到A，B，C，D的概率值。如何保证呢？两种情况：
+        我们只要保证，选择上面表格中每一个元素的概率是相同的，就可以得到A，B，C，D的概率值。如何保证呢？两种情况：
 
-+ 当国家数以及热度都是固定时，比如上面的总数10，随机0-9的数字，即可。
-+ 当国家数以及热度都是不固定时，则需要蓄水池抽样算法.
+        + 当国家数以及热度都是固定时，比如上面的总数10，随机0-9的数字，即可。
+        + 当国家数以及热度都是不固定时，则需要蓄水池抽样算法.
 
 ## T30 : 色子问题
 
 ### n个色子，每个色子m面，每一面的值分别是1-m。你将n个色子同时抛，落地后将所有朝上面的数字加起来，记为sum。给定一个数字x，如果sum>x，则你赢。给定n，m，x，求你赢的概率。
-+ 1<=n<=100
-+ 1<=m<=10
-+ m<=x<n*x
+        + 1<=n<=100
+        + 1<=m<=10
+        + m<=x<n*x
 #### 这种题目一般都是产生式模型，其实也就是时间换空间的做法。
 
-代码为：
+        代码为：
 
 ```
-void helper(const int n, const int m, int cur_index, int sum, vector<int> &cnt)
-{
-    if(cur_index > n)
-    {
-        cnt[sum]++;
-        return;
-    }
-    int tmp = sum;
-    for(int i=1;i<=m;++i)
-    {
-        sum = tmp;
-        sum += i; // add current dice's index
-        helper(n,m,cur_index+1,sum,cnt);
-    }
-}
-
-double win2(const int n, const int m, const int x)
-{
-    if(x < n || x > m*n) return 0;
-    vector<int> cnt(n*m+1,0);
-    helper(n,m,1,0,cnt);
-    int cn = accumulate(cnt.begin()+x,cnt.end(),0);
-    int sum = accumulate(cnt.begin(),cnt.end(),0);
-    cout << cn << " " << sum << endl;
-    return static_cast<double>(cn)/sum;
-}
-
-//循环版本
-double win(const int n, const int m, const int x)
-{
-    if(x < n || x > m*n) return 0.0; // illegal x
-    vector<int> prev(n*m+1,0);
-    vector<int> next(n*m+1,0);
-    //init
-    for(int i=1;i<=m;++i) prev[i]=1;
-
-    for(int k = 2;k <= n ; ++k) //dice count
-    {
-        //update each elem in next
-        vector<int>(n*m+1,0).swap(next);
-        for(int i=k;i<= m*k; ++i) //the updated index is in a range
+        void helper(const int n, const int m, int cur_index, int sum, vector<int> &cnt)
         {
-            //add prev m elems
-            for(int j=1; j<=i && j<=m;++j)
+            if(cur_index > n)
             {
-                next[i] += prev[i-j];
+                cnt[sum]++;
+                return;
+            }
+            int tmp = sum;
+            for(int i=1;i<=m;++i)
+            {
+                sum = tmp;
+                sum += i; // add current dice's index
+                helper(n,m,cur_index+1,sum,cnt);
             }
         }
-        prev.swap(next);
+
+    double win2(const int n, const int m, const int x)
+    {
+        if(x < n || x > m*n) return 0;
+        vector<int> cnt(n*m+1,0);
+        helper(n,m,1,0,cnt);
+        int cn = accumulate(cnt.begin()+x,cnt.end(),0);
+        int sum = accumulate(cnt.begin(),cnt.end(),0);
+        cout << cn << " " << sum << endl;
+        return static_cast<double>(cn)/sum;
     }
 
-    int cn = 0;
-    for(int i=x;i<m*n+1;++i)
-        cn += prev[i];
-    int sum = accumulate(prev.begin(),prev.end(),0);
-    return static_cast<double>(cn)/sum;
-}
+    //循环版本
+    double win(const int n, const int m, const int x)
+    {
+        if(x < n || x > m*n) return 0.0; // illegal x
+        vector<int> prev(n*m+1,0);
+        vector<int> next(n*m+1,0);
+        //init
+        for(int i=1;i<=m;++i) prev[i]=1;
+
+        for(int k = 2;k <= n ; ++k) //dice count
+        {
+            //update each elem in next
+            vector<int>(n*m+1,0).swap(next);
+            for(int i=k;i<= m*k; ++i) //the updated index is in a range
+            {
+                //add prev m elems
+                for(int j=1; j<=i && j<=m;++j)
+                {
+                    next[i] += prev[i-j];
+                }
+            }
+            prev.swap(next);
+        }
+
+        int cn = 0;
+        for(int i=x;i<m*n+1;++i)
+            cn += prev[i];
+        int sum = accumulate(prev.begin(),prev.end(),0);
+        return static_cast<double>(cn)/sum;
+    }
 ```
 
 ## T31: 巧妙变换（完美洗牌）
@@ -1155,32 +1161,32 @@ double win(const int n, const int m, const int x)
 
 #### 本问题是矩阵的原地reverse的问题。矩阵的size为 2 * n。
 
-思路：
+        思路：
 
 ```
-void shuffle(char *A, const int R, const int C)
-{
-    if(A == nullptr || R <= 0 || C <= 0 ) return ;
-    if(R == 1 || C == 1 ) return;
-    const int size = R*C-1;
-    vector<bool> B(size+1,false);
-    B[0] = B[size] = true ; //the first and last
-    for(int i=1;i<size;++i)
-    {
-        if(B[i]) continue;
-        int beg = i ;
-        char tmp = A[beg];
-        int next = i;
-        do
+        void shuffle(char *A, const int R, const int C)
         {
-            next = (i*R)%size;
-            swap(A[next],tmp);
-            B[i] = true;
-            i = next;
-        }while(next != beg);
-    }
-    return;
-}
+            if(A == nullptr || R <= 0 || C <= 0 ) return ;
+            if(R == 1 || C == 1 ) return;
+            const int size = R*C-1;
+            vector<bool> B(size+1,false);
+            B[0] = B[size] = true ; //the first and last
+            for(int i=1;i<size;++i)
+            {
+                if(B[i]) continue;
+                int beg = i ;
+                char tmp = A[beg];
+                int next = i;
+                do
+                {
+                    next = (i*R)%size;
+                    swap(A[next],tmp);
+                    B[i] = true;
+                    i = next;
+                }while(next != beg);
+            }
+            return;
+        }
 ```
 
 ## T32 ： 赛马
@@ -1193,28 +1199,28 @@ void shuffle(char *A, const int R, const int C)
 
 #### 更加巧妙一点的方法，那就是将数组中的3个元素分别看作质数2，3，5，...，并将这个质数乘起来，那么积的结果的2，3，5，。。。的因子的个数，依次填入之前的数字即可了。
 
-代码为：
+        代码为：
 
 ```
-void sort123(int *A, const int n)
-{
-    if(n < 2) return;
+        void sort123(int *A, const int n)
+        {
+            if(n < 2) return;
 
-    int p1 = 0,p2=0,p3=n-1;
-    for( ; p2 <= p3; ++p2)
-    {
-        if(A[p2] == 1)
-        {
-            swap(A[p1++], A[p2]);
+            int p1 = 0,p2=0,p3=n-1;
+            for( ; p2 <= p3; ++p2)
+            {
+                if(A[p2] == 1)
+                {
+                    swap(A[p1++], A[p2]);
+                }
+                else if(A[p2] == 3)
+                {
+                    swap(A[p2],A[p3]);
+                    --p2;
+                    --p3;
+                }
+            }
         }
-        else if(A[p2] == 3)
-        {
-            swap(A[p2],A[p3]);
-            --p2;
-            --p3;
-        }
-    }
-}
 ```
 ## T34 : 数组波谷
 ### 一个数组A[1...n]，满足A[1]>=A[2], A[n] >= A[n-1]。A[i]被成为波谷，意味着：A[i-1] >= A[i] <= A[i+1]。请给出一个算法，找到数组中的一个波谷。O(n)的方法，是很直接，有更快的方法么？
@@ -1222,6 +1228,265 @@ void sort123(int *A, const int n)
 #### 既然存在更好的方法，那么必然是O（logn）, 自然想到了用二分查找。
 #### Obsertvation: 数组的两端有 A[1] >= A[2], A[n] >= A[n-1]，也就是说整个数组是一个V字型，那么必然存在波谷。那么每次取mid，根据mid与其前后两个元素之间的关系，那么我们可以递归的查找某一边！！！
 
-+ if A[mid-1] >= A[mid] <= A[mid+1],找到波谷，返回A［mid］;
-+ if A[mid-1] >= A[mid] and A[mid] >= A[mid-1] ，那么
-+ 
+        + if A[mid-1] >= A[mid] <= A[mid+1],找到波谷，返回A［mid］;
+    + if A[mid-1] >= A[mid] >= A[mid-1] ，那么在右边肯定存在一个波谷，二分查找又半边即可。
+        + if A[mid-1] <= A[mid] >= A[mid+1]，任选一边即可。
+        ＋if A[mid-1] <= A[mid] <= A[mid+1]，那么在左边一定存在波谷，二分查找左半边即可。
+        代码为：
+
+```
+        int minValue(const vector<int> &A)
+        {
+            const int n = A.size();
+            if(n < 2 || A[0] <= A[1] || A[n-1] <= A[n-2]) 
+            {
+                return -1;
+            }
+            int left=0,right=n-1;
+            while(left<=right)
+            {
+                int mid = left+(right-left)/2;
+                if(left == mid) return A[left] < A[right] ? left : right;
+                if(A[mid-1] >= A[mid] && A[mid] <= A[mid+1]) return mid;
+
+                if(A[mid-1] >= A[mid] && A[mid] >= A[mid+1]) left = mid+1;
+                else if(A[mid] >= A[mid-1] && A[mid+1] >= A[mid]) right=mid-1;
+                else left=mid+1;
+            }
+
+            return -1;
+        }
+```
+
+## T35:给定一根木棍，长一米，把它随机折成3段，问最短的一段期望为多长，最长的期望多长?
+### 此类题目无非是求积分，可以画图，求积分，即可。
+
+        这题随机变量看似3个，但是其实两个就可以了。设在X，Y处把棍子折断，X，Y都在[0,1]区间内均匀分布。
+
+        我们不妨设X<Y,那么三段的长度分别为X,Y-X,1-Y (米）。如果X是最短的，那么满足
+
+                                                     X<Y-X
+                                                     X<1-Y确定这组条件后，我们要求X的期望很简单，代入联合分布，以及这些条件得：
+
+                                                     $\inf_{0}^{1/3} {x * \inf_{2x}^{1-x} dydx}$
+
+                                                     这里，主要是由给出的条件，分别给出X,Y的上下界。我们先对Y积分，Y的上下界由1），2）很容易给出，那么X的呢？一般可画图出X，Y的坐标图，以及边界条件1）2），我们可知X最小为0，当1），2）两条曲线相交时取到最大值1/3.计算积分公式得出1/54. 这里我们假定了X，Y-X，1-Y中，X最小。Y-X最小以及1-Y最小的情形类似跟这种情况对称，变化下符号就一样了。另外Y>X情况也是一样，所以，我们加总这六种情况，得出期望值为:6*1/54=1/9.
+
+                                                     计算最大的一段的值类似，可先假定一组条件，然后根据对称性，简单求和。
+
+                                                     我们还是先假定X<Y然后X为其中最大段，那么
+
+                                                     X >Y-X
+                                                     X >1-Y
+                                                     这种情况，画出图来，容易确定积分上限界限，从而列出公式：
+                                                     $$ \inf_{1/3}^{1/2} {x * \inf_{1-x}^{2x} dydx}  + \inf_{1/2}^{1} {x * \inf_{1}^{1-x} dydx}$$
+
+                                                     等于1/54 + 1/12 ,同样，根据对称性，乘以6，最终得11/18.
+
+
+
+
+## T36 : 有两个色子，一个是正常的，六面分别1-6的数字；另一个六面都是空白的。现在有0-6的数字，请给出一个方案，将0-6中的任意数字涂在空白的色子上，使得当同时扔两个色子时，以相等的概率出现某一个数字。如果一个色子是1，另一个色子是2，则出现的数字是3。依次类推。
+
+
+### 首先，深入理解题目。两个色子，一个色子上1到6，是正常的，可以理解为，随手一扔，每个数字出现的概率是相同的，都是1/6；另一个呢？空白的，不过我们可以自己涂上0-6的数字，包括0和6。然后扔完了之后，一个色子上面出现a，另一个色子出现b，最终把a+b作为一个数字。有多少个不同的数字呢？假设有n个，则题目要求是每一个出现的概率都是1/n。
+
+        n的取值都有那些呢？1到12都可以。加入，就是1-12的数字，该如何途空白的色子，保证概率相等呢？两个色子，每个六面，扔起来，一共36种可能，如果出现12个数字，并且，每个数字是等概率的，则36/12=3，每个可能会出现三次。当，第一个色子，扔得数字是1时，第二个色子要有三次是0才能保证1出现了三次。同理，当第一个色子扔的是6，要得到三次12的数字，则第二个色子要有三次是6。则，空白的色子，必须涂三个0，三个6。我们来证明，每一个概率都是3/36=1/12:
+
+        第一个色子	第一个色子概率	第二个色子	所得数字
+        1	1/6	p(0)=p(6)=1/2	p(1) = p(7) = 1/2 * 1/6 = 1/12;
+    2	1/6	p(0)=p(6)=1/2	p(2) = p(8) = 1/2 * 1/6 = 1/12;
+    3	1/6	p(0)=p(6)=1/2	p(3) = p(9) = 1/2 * 1/6 = 1/12;
+    4	1/6	p(0)=p(6)=1/2	p(4) = p(10) = 1/2 * 1/6 = 1/12;
+    5	1/6	p(0)=p(6)=1/2	p(5) = p(11) = 1/2 * 1/6 = 1/12;
+    6	1/6	p(0)=p(6)=1/2	p(6) = p(12) = 1/2 * 1/6 = 1/12;
+    则，p(1)=p(2)=p(3)=p(4)=p(5)=p(6)=p(7)=p(8)=p(9)=p(10)=p(11)=p(12)=1/12
+
+        最后的取值范围，还可以是其他的么？我们已经知道正常的色子，哪一面出现的概率都是1/6；能不能充分利用这个呢？只需要空白的色子，六面都是一个数字就可以了。p = 1/6 * 1 最终每个数字出现的概率都是1/6。
+
+## T37 : 给定一个数组，我们可以找到两个不相交的、并且是连续的子数组A和B，A中的数字和为sum(A), B中的元素和为sum(B)。找到这样的A和B，满足sum(A) - sum(B)的绝对值是最大的。例如：[2, -1 -2, 1, -4, 2, 8]划分为A=[-1, -2, 1, -4], B=[2, 8]， 最大的值为16
+        代码为：
+
+```
+
+
+        void minSub(const vector<int> &A, vector<int> &minL, vector<int> &maxL, vector<int> &minR, vector<int> &maxR)
+        {
+            const int n = A.size();
+
+            minL[0] = A[0];
+            maxL[0] = A[0];
+
+            //get the minL and maxL first
+            int min_tmp = A[0], max_tmp = A[0];
+            for(int i=1;i<n;++i)
+            {
+                //A[0...i];
+                if(min_tmp > 0 ) min_tmp = 0;
+                min_tmp += A[i];
+                minL[i] = min(minL[i-1],min_tmp);
+                if(max_tmp < 0 ) max_tmp = 0;
+                max_tmp += A[i];
+                maxL[i] = max(maxL[i-1],max_tmp);
+            }
+            //get the minR and maxR 
+            minR[n-1]=A[n-1],maxR[n-1]=A[n-1];
+            min_tmp = A[n-1], max_tmp = A[n-1];
+            for(int i=n-2;i>=0;--i)
+            {
+                //A[0...i];
+                if(min_tmp > 0 ) min_tmp = 0;
+                min_tmp += A[i];
+                minR[i] = min(minR[i+1],min_tmp);
+                if(max_tmp < 0 ) max_tmp = 0;
+                max_tmp += A[i];
+                maxR[i] = max(maxR[i+1],max_tmp);
+            }
+        }
+
+    //minL[i] :the minimum subarray of A[0...i].
+    int diff(const vector<int> &A)
+    {
+        const int n = A.size();
+        if(n < 2) return 0; //illegal
+        vector<int> minL(n,0),maxL(n,0),minR(n,0),maxR(n,0);
+        minSub(A,minL,minR,maxL,maxR);
+        int ret = INT_MIN;
+        for(int i=1;i<n;++i)
+        {
+            //cut [0...i-1] and [i..n-1] 
+            int s1 = abs(minL[i-1]-maxR[i]);
+            int s2 = abs(maxL[i-1]-minR[i]);
+            ret = max(ret,max(s1,s2));
+        }
+        return ret;
+    }
+```
+##  T38 : 大家都知道facebook用户都是双向的好友，a是b的好友，那么b一定是a的好友，现在给定一个用户列表，其中有些用户是好友，有些不是，请判断，这些用户是否可以划分为两组，并且每组内的用户，互相都不是好友。如果能，请给出这个划分。
+
+        + 例子1： 用户：{1, 2, 3} 好友关系：1-2， 2-3 划分：{1,3} {2} 
+    + 例子2： 用户{1,2,3,4} 好友关系：1-2， 2-3， 3-4，4-1 划分：{1, 3}{2, 4}
+## 根据二分图的特性，一条边上的两个点，肯定是属于不同的组。如果它们出现在同一个组中，肯定就不是二分图了。怎么判断，
+    一条边上的两个点，分属于不同的组呢？我们需要遍历图，如果找到一条边，两个节点，都在同一组，则不是二分图；如果图遍历完成之后，
+        没有找到这样的边，则是二分图。我们在遍历的过程中，我们需要区分，一条边的两个节点分属于不同的组，这里我们用到了染色法。
+### 核心思想如下： 从某一个点开始，将这个节点染色为白色，并且开始广度优先遍历，找到与其相邻的节点，如果是二分图，相邻节点的颜色
+        都应该不同。如果是黑色，则不变；如果是无色，则染成黑色；如果是白色，也就是同色，程序退出。当图遍历完毕时，没有相邻节点同色的，
+        则是二分图，标记为白色和黑色的两组就是一个划分。
+        来看两个例子，第一个图中的例子2：
+
+
+        |  步骤  |  遍历节点  | 相邻节点 |  队列  |
+        | ------------- |:-------------:| ---------:| -----------:|
+        |  1｜1:黑	| 2：黑，4：黑	 |  2，4|
+        |  2 |  2:黑| 1:白，3:白 |  4，3|
+        |  3 | 4:黑| 1：白，3：白	 |  3 |
+        |  4 | 3:白| 2：黑，4：黑 | 空 |
+## 使用BFS. 
+
+## T39 : 构造最大数 
+        给定只包含正数的数组，给出一个方法，将数组中的数拼接起来，得到的数，是最大的。 例如： [4, 94, 9, 14, 1] 拼接之后，所得最大数为：9944141。
+### 分析：
+### 下述分析最重要的一点就是说根据数组的第一位将数组分成几个组，每个组内按照第一位，第二位的顺序排序下去即可。如果组内只有一个元素，那么不管即可。
+
+初看这个题目，肯定是要排序的。按照从左到右的第一个位置的数字，从大到小进行排序。如题目中的例子，结果是：
+94  9   4   14  1
+直接拼接为9494141显然不是最大的。那很自然的想法，就是考虑**从左到右第二位的数字**。考虑9和94的第二个数字，9没有第二个数字如何处理？**这里有一个小技巧，就是用9补位**。为什么用9呢？994>949，因为4<9，所以，拼接的方式 9 + “” + 94. 为了方便我们排序，所以用9进行了补位。
+ *关于上述的用9来补位，意味着什么呢？比如数字 94 ，9的组合有   949 和 994*，那么显然最终我们希望的是什么呢，我们希望的是数字9在94的前面！！！这里便是下面的简单的quicksort的解法的基础！！！*.
+
+
+        再看一个例子：56,54,5。第一次排序结果为:
+
+        56  54  5
+        第二次呢？
+
+        56  55  54
+        此时要注意，第二55，是由5补位而来的。
+
+        再看一个复杂一点的例子，包含了：1位数，2位数，3位数：96 9 95 556 56 55 5 554 54 3 2 1
+
+        第一次排序：
+
+        96  9   95  556 56  55  5   554 54  3   2   1
+        96  9   95  556 56  55  5   554 54  3   2   1
+        第二次排序：
+
+        9   96  95  56  556 55  5   554 54  3   2   1
+        99  96  95  56  556 55  55  554 54  3   2   1
+        上面一行，是原始数字，下面一行，经过补位了。
+
+        第三次排序
+
+        9 96 95 56 556 55 5 554 54 3 2 1 99 96 95 565 556 555 555 554 545 3 2 1
+
+        9   96  95  56  556 55  5   554 54  3   2   1
+        99  96  95  565 556 555 555 554 545 3   2   1
+        第四次排序
+
+        9 96 95 56 556 55 5 554 54 3 2 1 99 96 95 565 556 555 555 554 545 3 2 1
+
+        9   96  95  56  556 55  5   554 54  3   2   1
+        99  96  95  565 556 555 555 554 545 3   2   1
+        处理最后三个个位数即可。则最终的结果是: 996955655655554554321
+
+        上面的算法，排序处理自左向右第一位，然后处理第二位，一次类推，如果某一组内，即第一个数字相同的一组，长度不同时，采用第一位进行补位。
+
+        代码为：
+```
+        /compare lhsrhs rhslhs
+        bool cmp(int lhs, int rhs)
+        {
+            cout << "compare : " << lhs << " " << rhs << endl;
+            char tmp1[20],tmp2[20];
+            sprintf(tmp1,"%d",lhs);
+            sprintf(tmp2,"%d",rhs);
+            cout << lhs << " " << tmp1 << endl;
+            cout << rhs << " " << tmp2 << endl;
+
+            int len1 = strlen(tmp1),len2=strlen(tmp2);
+            if(len1 == len2) return lhs > rhs;
+
+            //len1 != len2
+            //add tmpw to tmp1, and add tmp1 to tmp2
+            char temp[20] = {0};
+            strcat(temp,tmp1);
+            strcat(tmp1,tmp2);
+            strcat(tmp2,temp);
+
+            cout << "compare : " << tmp1 << " " << tmp2 << endl;
+
+            if(strcmp(tmp1,tmp2) > 0) return true;
+            return false;
+
+        }
+    int partition(int *A, int left, int right)
+    {
+        int pivot = A[right];
+        int i=left;
+        for(int k=left;k<right;++k)
+        {
+            if(cmp(A[k],pivot)) swap(A[i++],A[k]);
+        }
+        swap(A[i],A[right]);
+        return i;
+    }
+
+    void quickSort(int *A, int left, int right)
+    {
+        if(left >= right) return;
+        int idx = partition(A,left,right);
+        quickSort(A,left,idx-1);
+        quickSort(A,idx+1,right);
+    }
+
+    void constructMaxNum(int *A, int n)
+    {
+        if(A == nullptr || n <= 0 ) return ;
+        quickSort(A,0,n-1);
+
+        cout << "ret : ";
+        for(int i=0;i<n;++i)cout<< A[i];
+        cout << endl;
+    }
+
+```
+
