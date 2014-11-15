@@ -1490,3 +1490,174 @@ void count2(vector<int> &A)
 
 ```
 
+## T40 : Morris 遍历
+### 先序，中序，后序的Morris遍历的实现：
+#### 先序：
+代码为：
+
+```
+  vector<int> preorderTraversal(TreeNode *root) {
+        if(root == nullptr) return vector<int>();
+        vector<int> ret;
+        while(root)
+        {
+            if(root->left == nullptr)
+            {
+                ret.push_back(root->val);
+                root = root->right;
+                continue;
+            }
+            TreeNode *node = root->left;
+            for(;node->right != nullptr && node->right != root; node=node->right);
+            if(node->right == nullptr) //visit firstly
+            {
+                node->right = root;
+                ret.push_back(root->val);
+                root = root->left;
+            }
+            else //visited
+            {
+                node->right = nullptr;
+                root = root->right;
+            }
+        }
+        return ret;
+    }
+```
+
+#### 中序
+
+```
+   vector<int> inorderTraversal(TreeNode *root) {
+        if(root == nullptr) return vector<int>();
+        vector<int> ret;
+        while(root)
+        {
+            if(root->left == nullptr)
+            {
+                ret.push_back(root->val);
+                root = root->right;
+                continue;
+            }
+            auto node = root->left;
+            for(;node->right != nullptr && node->right != root;node=node->right);
+            if(node->right == nullptr)
+            {
+                node->right = root;
+                root=root->left;
+            }
+            else
+            {
+                node->right = nullptr;
+                ret.push_back(root->val);
+                root = root->right;
+            }
+        }
+        return ret;
+    }
+```
+#### 后序： （后序的版本比较复杂，添加了附加节点。）
+
+```
+void reverse(TreeNode *from, TreeNode *to)
+{
+  if(from==to) return;
+  TreeNode *head=nullptr,*next=nullptr;
+  while(from)
+  {
+    next=from->right;
+    from->right=head;
+    head=from;
+    from=next;
+  }
+}
+void reverse_print(TreeNode *from, TreeNode *to, vector<int> &ret)
+{
+    reverse(from,to);
+    TreeNode *tmp=to;
+    while(tmp)
+    {
+      ret.push_back(tmp->val);
+      tmp=tmp->right;
+    }
+    reverse(to,from);
+}
+public:
+    //Morris
+    vector<int> postorderTraversal(TreeNode *root) {
+        if(root == nullptr) return vector<int>();
+        vector<int> ret;
+        TreeNode dummy(0);
+        dummy.left = root;
+        root = &dummy;
+        while(root)
+        {
+            if(root->left == nullptr)
+            {
+                root = root->right;
+                continue;
+            }
+            auto node = root->left;
+            for(;node->right && node->right != root; node=node->right);
+            if(node->right == nullptr)
+            {
+                node->right = root;
+                root=root->left;
+            }
+            else
+            {
+                node->right = nullptr;
+                reverse_print(root->left,node,ret);
+                root = root->right;
+            }
+        }
+        return ret;
+    }
+```
+
+## T41: 小岛的故事
+题目：一个岛上有100个人，其中有5个红眼睛，95个蓝眼睛。这个岛有三个奇怪的宗教规则。 1. 他们不能照镜子，不能看自己眼睛的颜色。 2. 他们不能告诉别人对方的眼睛是什么颜色。 3. 一旦有人知道了自己是红眼睛，他就必须在当天夜里自杀。 某天，有个旅行者到了这个岛。 由于不知道这里的规矩，所以他在和全岛人一起的时候，不留神就说了一句话：你们这里有红眼睛的人。 假设这个岛上的人足够聪明，每个人都可以做出缜密的逻辑推理。
+
+问题一：请问这个岛上将会发生什么？
+
+答案：第五天五个红眼睛一起自杀死了。 思路：当旅行者说了这句话后，岛上所有人都知道有红眼睛存在了，那么会怎么办呢？ 假设岛上只有1个红眼睛，那么他马上知道自己是红眼睛，当天就自杀了。
+
+假设岛上有两个红眼睛，那么每个红眼睛都先假定自己不是红眼睛，那么他看到的岛上只有一个红眼睛，他会判断当天这个红眼睛就会死，可是当天没有事发生。于是他知道岛上不止一个红眼睛，而自己是另一个，于是双双在第二天自杀。依次类推5个红眼睛在第五天自杀了。
+
+问题二： 那么旅行者存在的意义是什么呢？毕竟一开始岛上每个人都知道岛上存在红眼睛。只要从岛上所有人都知道存在有红眼睛开始，这5个红眼睛， 就会在第五天选择自杀，等旅行者来岛上，岛上的红眼睛早死光了。
+
+答案： 假设岛上只有一个红眼睛，这个红眼睛看到的是99个蓝眼睛，所以这个红眼睛没必要自杀，所以一个红眼睛是可以稳定存在的。
+
+假设岛上有两个红眼睛，虽然岛上每个人都知道存在红眼睛，但红眼睛也不会自杀。因为每个红眼睛都假定自己是蓝眼睛，他看到的是1个红眼睛和98个蓝眼睛，由于一个红眼睛是可以稳定存在的，所以这时其中的一个红眼睛是不能断定自己也是红眼睛的。
+
+同理5个红眼睛可以稳定存在。
+
+总结：旅行者出现的意义在于，他说了那句话，大家的推理方式就变了。
+
+## T42: 忘我之乘积
+### 给你一个数组A[1..n]，请你在O(n)的时间里构造一个新的数组B[1..n]，使得B[i]=A[1]A[2]...*A[n]/A[i]。你不能使用除法运算。
+代码为：
+
+```
+vector<int> compute(const vector<int> &A)
+{
+    const int n = A.size();
+    vector<int> B(n,1);
+    B[0] = A[0];
+    for(int i=1;i<n-1;++i)
+        B[i] = B[i-1]*A[i];
+    B[n-1] = B[n-2];
+    int c = A[n-1];
+    cout << "subArr : " ;
+    for(auto b:B)cout << b << " "; cout << endl;
+    for(int i=n-2;i>=1;--i)
+    {
+        B[i] = B[i-1]*c;
+        c *= A[i];
+    }
+    B[0] = c;
+    return B;
+}
+
+```
+## T43:
