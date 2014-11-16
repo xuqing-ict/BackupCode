@@ -8,7 +8,6 @@ using namespace std;
 
 int merge(int A[], int left, int mid, int right)
 {
-	cout << left << " " << mid << " " << right << endl;
 	int RC = 0; 
 	int *L = new int[mid-left+1];
 	int *R = new int[right-mid];
@@ -18,15 +17,8 @@ int merge(int A[], int left, int mid, int right)
 		L[i] = A[left+i];
 	for(int i = 0; i < rLen; ++i)
 		R[i] = A[mid+1+i];
-	cout << "L = ";
-	for(int i = 0; i < lLen; ++i)
-		cout << L[i] << " ";
-	cout << endl;
-	cout << "R = ";
-	for(int i = 0; i < rLen; ++i)
-		cout << R[i] << " ";
-	cout << endl;
 	int i(0),j(0),k(left);
+
 	while(( i < lLen) && (j < rLen))
 	{
 
@@ -38,22 +30,11 @@ int merge(int A[], int left, int mid, int right)
 		}
 		else
 		{
-			//应该在j还没变化的时候决定逆序数是否应该加！！！
-			if (L[i] > (3*R[j]))
-			{
-				RC += ((right-left)/2-i+1);
-			}
 			A[k] = R[j];
 			j++;
 			k++;
-
-			//RC += ((right-left)/2-i+1);
-			//此处的right和left指的是当前处理的数组的right和left，
-			//很直观的讲，此处应该加上的是|L|-i，而L的长度就是(right-left)/2+1
-			//注意！！左边的长度为|L| = mid-left+1 = (left+(right-left)/2)-left+1
-			//而此时处理的元素的偏移量为i，即该元素前面的元素个数为i，则用|L|-i = (right-left)/2+1-i即为所求。
-		}
-	}
+        }
+    }
 	assert(i <= lLen && j <= rLen);
 	while(i < lLen)
 	{
@@ -67,9 +48,20 @@ int merge(int A[], int left, int mid, int right)
 		k++;
 		j++;
 	}
+
+    i = j = 0;
+	while(( i < lLen) && (j < rLen))
+    {
+        if (L[i] > (3*R[j]))
+        {
+            RC += ((right-left)/2-i+1);
+            ++j;
+        }
+        else ++i;
+    }
+
 	delete [] L;
 	delete [] R;
-	cout << "RC = " << RC << endl;
 	return RC;
 }
 
@@ -93,25 +85,14 @@ int mergeSort(int A[], int left, int right)
 
 int main()
 {
-	srand(time(NULL));
-	int len = rand()%10;
-	int *A = new int[len];
-	for(int i = 0; i < len; ++i)
-	{
-		A[i] = rand()%10;
-	}
-	for(int i = 0; i < len; ++i)
-	{
-		cout << A[i] << ", ";
-	}
-	cout << endl;
-	cout <<	"Inverse Number = " << mergeSort(A,0,len-1) << endl;
-	for(int i = 0; i < len; ++i)
-	{
-		cout << A[i] << ", ";
-	}
-	cout << endl;
+    int len;
+    int A[100];
+    while(cin >> len) {
+        for(int i = 0; i < len; ++i) {
+            cin >> A[i];
+        }
+        cout <<	 mergeSort(A,0,len-1) << endl;
+    }
 
-	//delete [] A;
 	return 0;
 }
