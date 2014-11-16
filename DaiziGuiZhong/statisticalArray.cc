@@ -1,6 +1,6 @@
 /**
  * @file statisticalArray.cc
- * @brief 
+ * @brief
  * @author Qing Xu, xuqinguestc@163.com
  * @version 0.1.00
  * @date 2014-09-23
@@ -19,6 +19,8 @@ vector<int> test(const vector<int> &A)
     for(auto a : A)ret[a]++;
     return ret;
 }
+
+//
 void count(vector<int> &A)
 {
     cout << "A : ";
@@ -35,6 +37,7 @@ void count(vector<int> &A)
     for(int i=0;i<n;++i)A[i]*=n;
     for(int i=0;i<n;++i)A[A[i]/n]++;
     for(int i=0;i<n;++i)A[i] = A[i]%n;
+
     copy(A.begin(),A.end(), ostream_iterator<int>(cout,"\t"));
     cout << endl;
 
@@ -44,7 +47,7 @@ void count(vector<int> &A)
     for(int i=0;i<=n;++i)
         if(ret[i] != A[i])
             cout << "error!!!" << endl;
-}   
+}
 
 void count2(vector<int> &A)
 {
@@ -72,7 +75,7 @@ void count2(vector<int> &A)
 
     for(int i=0;i<n;++i) A[i] = A[i]/n;
     int tmp = A[n];
-    for(int i=n;i>0;--i)A[i] = A[i-1]; 
+    for(int i=n;i>0;--i)A[i] = A[i-1];
     A[0] = tmp;
 
     cout << "A = ";
@@ -96,14 +99,15 @@ int main(void)
     int k = 100;
     while(k--)
     {
-        srand(time(nullptr));
+       /* srand(time(nullptr));
 
         const int n = rand()%1000;
         vector<int> A(n,0);
         for(int i=0;i<n;++i)
             A[i] = (rand()%n)+1;
-        //vector<int> A = {4,5,6,4,4,3};
-        //    count(A);
+            */
+        vector<int> A = {3,3,3};
+        //count(A);
         count2(A);
     }
     return 0;

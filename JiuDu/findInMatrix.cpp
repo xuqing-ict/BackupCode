@@ -1,4 +1,3 @@
-//Search a specific number in Young Matrix
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -22,7 +21,6 @@ int main()
     while(scanf("%d\t%d\n",&row,&column)!= EOF)
     {
         scanf("%d\n",&target);
-        //cout << row << column << target << endl;
         vector<vector<int> > matrix(row,vector<int>(column));
         for(int i =0; i< row; ++i)
             for(int j = 0 ; j < column; ++j)

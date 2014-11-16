@@ -1,6 +1,6 @@
 /**
  * @file deleteChars.cc
- * @brief 
+ * @brief
  * @author Qing Xu, xuqinguestc@163.com
  * @version 0.1.00
  * @date 2014-09-26
@@ -26,8 +26,9 @@ void deleteOneChar(char *s, const char c)
     s[i] = '\0';
 }
 
+
 //删除'b' 和 "ac"
-void deleteChars(char *s)
+void deleteChars_ans(char *s)
 {
     cout << "s : " << s << endl;
 
@@ -58,14 +59,50 @@ void deleteChars(char *s)
     if(PREV) // 说明还有最后一个'a'需要写到合理的位置
         s[i++] = 'a';
     s[i] = '\0';
-}   
+}
 
+void deleteChars(string &s)
+{
+    const int n = s.size();
+    if(n == 0) return;
+    int i = 0 ;
+    int k = 0; //输出串的末端
+    bool S1 = false;
+    while(i < n)
+    {
+        if(s[i] == 'b') {++i; continue;}
+        else if(s[i] == 'a')
+        {
+            if(s[i+1] == 'c')
+            {
+                if(i > 1 && s[i+2] == 'c' && s[i-1] == 'a') i -= 2;
+                i += 2;
+
+                continue;
+            }
+            else if(s[i+1] == 'b') {s[k++] = s[i]; i += 2; continue;}
+            else {s[k++] = s[i]; ++i; continue;}
+        }
+        else
+        {
+            s[k++] = s[i];
+            ++i;
+            continue;
+        }
+    }
+    s.resize(k);
+    return ;
+}
 int main(void)
 {
-    char s[100];
+    char s1[100];
     cout << "string : ";
-    cin >> s;
-    deleteChars(s);
-    cout << "ret : " << s << endl;
+    cin >> s1;
+    string s2(s1);
+    deleteChars_ans(s1);
+    cout << "ans : " << s1 << endl;
+    deleteChars(s2);
+    cout << "ret : " << s2 << endl;
+    assert(s1 == s2);
     return 0;
 }

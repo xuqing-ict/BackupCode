@@ -1,6 +1,6 @@
 /**
  * @file printHeight.cc
- * @brief 
+ * @brief
  * @author Qing Xu, xuqinguestc@163.com
  * @version 0.1.00
  * @date 2014-09-25
@@ -12,7 +12,7 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-
+/*
 int getHeight(const vector<int> &A, vector<int> &height, int idx)
 {
     if(height[idx] != -1) //has computed
@@ -41,6 +41,24 @@ vector<int> printHeight(const vector<int> &A)
         if(height[i] == -1)
             maxHeight = max(maxHeight, getHeight(A,height,i));
         //height[i] = getHeight(A,height,i);
+    return height;
+}
+
+*/
+int helper(const vector<int> &A, const int idx, vector<int> &height)
+{
+    if(height[idx] != -1 )return height[idx];
+    if(A[idx] == -1) {height[idx] = 1; return 1;}
+    height[idx] = 1 + helper(A,A[idx], height);
+    return height[idx];
+}
+
+vector<int> printHeight(const vector<int> &A)
+{
+    const int n = A.size();
+    vector<int> height(n,-1);
+    for(int i = 0 ; i < n ; ++i)
+        helper(A,i,height);
     return height;
 }
 

@@ -1,6 +1,6 @@
 /**
  * @file Sort123.cc
- * @brief 
+ * @brief
  * @author Qing Xu, xuqinguestc@163.com
  * @version 0.1.00
  * @date 2014-09-18
@@ -9,6 +9,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+/*
 void sort123(int *A, const int n)
 {
     if(n < 2) return;
@@ -26,6 +27,21 @@ void sort123(int *A, const int n)
             --p2;
             --p3;
         }
+    }
+}
+*/
+
+
+void sort123(int *A, const int n)
+{
+    if(A == nullptr || n < 2) return;
+    int p1=0,p2=n-1;
+    int  k = 0;
+    while(k <= p2)
+    {
+        if(A[k] == 1) {swap(A[k++],A[p1++]);}
+        else if(A[k] == 3){swap(A[k],A[p2--]);}
+        else ++k;
     }
 }
 int main(void)

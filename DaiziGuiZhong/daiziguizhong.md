@@ -1723,4 +1723,377 @@ int divide(int a, int b)
 
 ```
 
-## T44: 
+## T44:海枯石烂 
+### 两个玩家，一堆石头，假设多于100块，两人依次拿，最后拿光者赢，
+规则是：
++ 1. 第一个人不能一次拿光所有的；
++ 2. 第一次拿了之后，每人每次最多只能拿对方前一次拿的数目的两倍。求先拿者必胜策略, 如果有的话。怎么证明必胜。
+
+### 分析
+**这是斐波那契博弈，当且仅当石头个数是斐波那契数的时候先手必败**。
+
+### 证明：
+让我们用第二数学归纳法证明：
+为了方便，我们将n记为f[i]。   //这里的f[i]的意义应该是第i个斐波拉切数！！
+
+首先 当i=2　时，因为不能全部去完，先手只能取1颗，显然必败，结论成立。
+
+其次，假设当　i<=k　时，结论成立。 则当　i=k+1　时，f[i] = f[k]+f[k-1]。
+**则我们可以把这一堆石子看成两堆，简称k堆和k-1堆。（一定可以看成两堆，因为假如先手第一次取的石子数大于或等于f[k-1]，则后手可以直接取完f[k]，因为　f[k] < 2*f[k-1]）**
+
+对于k-1堆，由假设可知，不论先手怎样取，后手总能取到最后一颗。下面我们分析一下后手最后取的石子数x的情况。
+
+如果先手第一次取的石子数　y>=f[k-1]/3　，则这小堆所剩的石子数小于2y，即后手可以直接取完，此时　x=f[k-1]-y　，则　x<=2/3*f[k-1]　。
+
+我们来比较一下　2/3f[k-1]　与　1/2f[k]　的大小。即　4f[k-1]与　3f[k]　的大小，对两值作差后不难得出，后者大。
+
+所以我们得到，x<1/2*f[k]　。
+
+即后手取完k-1堆后，先手不能一下取完k堆，所以游戏规则没有改变，则由假设可知，对于k堆，后手仍能取到最后一颗，所以后手必胜。
+
+即i=k+1时，结论依然成立。
+
+那么，当n不是Fibonacci数的时候，情况又是怎样的呢？
+
+这里需要借助“Zeckendorf定理”（齐肯多夫定理）：任何正整数可以表示为若干个不连续的Fibonacci数之和。
+
+关于这个定理的证明，感兴趣的同学可以在网上搜索相关资料，这里不再详述。
+
+分解的时候，要取尽量大的Fibonacci数。
+
+比如分解85：85在55和89之间，于是可以写成85=55+30，然后继续分解30,30在21和34之间，所以可以写成30=21+9，
+
+依此类推，最后分解成85=55+21+8+1。
+
+则我们可以把n写成 n = f[a1]+f[a2]+……+f[ap]。（a1>a2>……>ap）
+
+我们令先手先取完f[ap]，即最小的这一堆。由于各个f之间不连续，则a(p-1) > ap + 1，则有f[a(p-1)] > 2*f[ap]。即后手只能取f[a(p-1)]这一堆，且不能一次取完。
+
+此时后手相当于面临这个子游戏（只有f[a(p-1)]这一堆石子，且后手先取）的必败态，即先手一定可以取到这一堆的最后一颗石子。
+
+同理可知，对于以后的每一堆，先手都可以取到这一堆的最后一颗石子，从而获得游戏的胜利。
+
+## T45：最多连续数的子集（并查集的应用。）
+### 给一个整数数组， 找到其中包含最多连续数的子集，比如给：15, 7, 12, 6, 14, 13, 9, 11，则返回: 5:[11, 12, 13, 14, 15]， 最简单的方法是sort然后scan一遍，但是要o(nlgn). 有什么O(n)的方法吗？
+#### Leetcode上的Longest Consecutive Sequence，建立hash表，分别记录每个元素的左边界和右边界，然后取最大的即可。
+
+代码为：
+```
+    int longestConsecutive(vector<int> &num) {
+        const int n = num.size();
+        if(n < 2) return n;
+        map<int,int> lbound,rbound;
+        int ret=0;
+        for(auto x:num)
+        {
+            if(lbound.find(x) != lbound.end()) continue;
+            lbound[x]=rbound[x]=x;
+            //modify lbound
+            if(lbound.find(x-1) != lbound.end())
+            {
+                lbound[x] = lbound[x-1];
+                rbound[lbound[x]] = x;
+            }
+            //modify rbound
+            if(rbound.find(x+1) != rbound.end())
+            {
+                rbound[x] = rbound[x+1];
+                lbound[rbound[x+1]] = lbound[x];
+                rbound[lbound[x]] = rbound[x+1];
+            }
+            
+            ret = max(ret,rbound[x]-lbound[x]+1);
+        }
+        return ret;
+    }
+```
+## T46：单链表之和
+### 两个单链表（singly linked list），每一个节点里面一个0-9的数字，输入就相当于两个大数了。然后返回这两个数的和（一个新list）。这两个输入的list长度相等。
+### 要求是：
++ 1. 不用递归。
++ 2. 要求算法在最好的情况下，只遍历两个list一次 ，最差的情况下两遍。
+#### 首先题意要清楚，链表等长，于是不用再paddle了。再次如果该链表是从低位到高位，那么很简单，直接遍历一遍即可，并且最终的进位在数组的末尾；如果链表的顺序是从高位到低位的话，那么也就是说我们需要递归的来进行。
+代码为：
+```
+//head1 and head2 have same length.
+int len(ListNode *head)
+{
+    int len = 0;
+    while(head){++len;head=head->next;}
+    return len;
+}
+ListNode *helper(ListNode *lhs, ListNode *rhs, int &carry)
+{
+    if(lhs==nullptr && rhs == nullptr) return nullptr;
+    ListNode *ret = helper(lhs->next,rhs->next,carry);
+    int sum = lhs->val+rhs->val+carry;
+    carry = sum/10;
+    int a = sum-carry*10;
+    ListNode *node = new ListNode(a);
+    node->next = ret;
+    ret = node;
+    return ret;
+}
+ListNode *addList(ListNode *head1, ListNode *head2)
+{
+    int len1 = len(head1), len2 = len(head2);
+    if(len1 != len2)
+    {
+        cout << "This function is not available the lists with different length..." <<endl;
+        return nullptr;
+    }
+    int carry = 0;
+    ListNode *ret = helper(head1,head2,carry);
+    if(carry)
+    {
+        ListNode *node=new ListNode(1);
+        node->next = ret;
+        ret = node;
+    }
+    return ret;
+}
+```
+## T47：在C中你如何调整比特来找出一个机器内存内的堆栈向上或向下增长？
+### 定义两个函数，一个函数内部定义一个局部变量，并且调用另外的一个函数，在那个函数中同样定义一个局部变量，查看这两个局部变量的地址大小即可。
+
+## T48：哪些比特在TPC/IP三个包中是握手？
+### 想到三次握手，SYN，SYN + ACK， ACK。
+A：它是SYN、SYN+ACK、ACK。源想发送数据到目的地，第一步它发送SYN去问目的地是否它准备好接收数据，然后目的地想去回答它是否准备好接收比特流于是它发送SYN+ACK，然后源需要对该目的地来确认它得到的是请求于是源返回ACK。
+
+TCP是面向连接的而UDP不是。TCP：连接建立->数据传输->连接终止。
+发起主机（客户端）发送一个同步(SYN标记设置)包发起一个连接。任何SYN包拥有一个序号，该序号在TCP段头是一个32位区。比如说这个事物的该序号值是x。
+其它主机接收数据包，从客户端记录了x的序号，并回复一个应答同步(SYN-ACK)。该应答号在TCP段头是一个32位区，它包含这个主机想要接收(x+1)的随后序号。该主机还发起了一个返回事物，这包含一个带有它自身值为y的发起序号的TCP段 。
+发起主机答复以下一个序号(x+1)和一个简单的值为y+1的应答号，它是其它主机的序号值+1。
+
+### Q：快速乘法(Karatsuba)算法是什么？
+A：它的算法是处理N位的两个大正数相乘，算法复杂度O(N^2)。思想主要是将乘法转化为加法来计算以减少计算复杂度。
+
+### Q：告诉我当你输入www.google.com进入网页浏览器时发生什么
+
+A1：解释DNS通过UPD端口53的运作等等，IP地址由DNS返回(有时ISP缓存这个URL->IP映射，这节省访问DNS的开销)，HTTP GET请求是发送到google.com服务器上，它返回HTML格式的google.com网页。
+
+A2：Google的DNS服务器进行负载平衡，让用户能够最快地访问Google的内容。实现这靠发送用户一群没有重载的IP地址，并在地理上接近他们。每群有几千台服务器，并由该进群中的硬件在被连接到的集群进一步负载平衡，以发送请求到最少负载的网络服务器。
+
+### Q：N线程.. n资源..你使用什么协议以确保不会发生死锁？（dead lock）
+A1：避免死锁用锁级别，每个线程将有不同的级别，高级别线程将能锁低级别线程而不是相反。
+A2：避免一个时间有多余一个的锁。
+A3：获得锁总是以同一次序。(get the lock with the same order.)
+A4：收缩同步段。
+
+### Q：你可以得到一个应用程序源码，当它运行时就会崩溃。在一个调试器中运行10次后，你发现在同一点它不再崩溃。该程序是单线程并只使用C标准库。什么编程错误会导致这个崩溃？你如何测试每一个？
+
+A1：它将需要耗费时间或者随机数或者它做了记忆中讨厌的事或者它在Windows下运行。
+A2：可能在代码中有多条递归，它们导致一个堆栈溢出，导致“超出内存”异常。
+A3：可能的原因可能是一个未初始化的指针/变量被用。
+
+### Q：这是一个代码片段，如何使得该代码抛出ArrayIndexOutOfBounds异常？ 
+#### 改代码本身是没有问题的，这个时候就需要考虑多线程的影响。
+private static String[] list = null;
+
+public static String[] getArray(size) {
+	list= new String[size];
+	for (int i = 0; i < size; i++) {
+		list[i] = "a" + i；
+	}
+	return list;
+}
+A：如果两个线程并行执行还用值10和7调用这个方法，第一个线程将创建10维数组，然后第二个线程将重新初始化7维同样的静态数组，接着第一个线程将运行这个数组从0到9还放值在里面，然而数组维数现在是7于是在list[7]它将抛出该异常。
+
+ ### Q：写一函数f(a,b)，它带有两个字符串参数并返回一串字符，该字符串只包含在两个串中都有的并按照在a中的顺序。写一个版本算法复杂度O(N^2)和一个O(N)
+
+A：private static String match(String a, String b) {
+
+String result = "";
+
+Set lettersSet = new HashSet(26);
+for (int i=0; i
+lettersSet.add(new Character(b.charAt(i)));
+}
+
+ 
+
+for (int i=0; i
+
+if (lettersSet.contains(new Character(a.charAt(i)))) {
+
+result=result+a.charAt(i);
+
+}
+
+}
+
+return result;
+
+}
+
+ 
+
+### Q (Count and say ... ):
+1
+1 1
+2 1
+1 2 1 1
+1 1 1 2 2 1 下一个数是什么？(3 1 2 2 1 1)
+
+### 序列的下一个数是什么10, 9, 60, 90, 70, 66, ?
+A) 96
+B) 1000000000000000000000000000000000\
+0000000000000000000000000000000000\
+000000000000000000000000000000000
+C) Either of the above
+D) None of the above
+#### 分析：
+ten, nine, sixty, ninety, seventy, sixty-six,
+每个数比前面的数多一个字母，10有3个字母，9有4个字母等。
+既然sixty-six(66)有8个字母下个数字需要有9个字母，它就是ninety-six(96)。
+ 
+
+### Q：有8块石头它们彼此相似除了一个比其它更重。为找出它，给你一个天平。找出最重的石头需要最少的称量次数是多少？
+
+#### A：划分石头成子集象(3,3,2)。使用天平去称量(3,3)，如果该天平保持平衡，则重的是在剩下的2个中，再次使用天平从这2个中来找出那个重（总计称量2次）。如果天平不平衡在称量(3,3)时, 选石头子集比另一边更重的，把它分成子集(1,1,1)，使用天平称量首先的2个，若保持平衡，剩下的石头则是更重的，否则高翘那边的就是更重的（总计称量2次）。 
+
+### Q: 只给你二个鸡蛋，你能上100层楼，你想知道鸡蛋的硬度。鸡蛋可能很硬或很脆弱，如果鸡蛋从第m层掉下而没破裂，而从第m+1层掉下就破裂了，那么这个鸡蛋的硬度就是m。你需要找出这个m和在最坏情况下最少试验次数。(经典鸡蛋问题)
+
+#### A: 计算机学生可能会首先用第一个鸡蛋做二分搜索(O(logN))再用第二个递增做线性搜索（O(N)），最后必将用线性搜索结束因为用第二个鸡蛋时你无法确定最高一层。因此，问题变为如何使用第一个鸡蛋来减少线性搜索。
+
+于是如果第一个蛋破裂在最高点我们要扔x-1次并且我们必须从x层高扔第一个蛋。现在如果第一个蛋的第一次扔没有破裂，如果第一个蛋在第二次扔破了我们要扔x-2次第二个蛋。假如16是答案，我需要扔16次才能找到答案。来验证一下是否可以从16层开始扔，首先从16层扔如果它破裂了，我们尝试所有其下的楼层从1到15；如果没破我们还能扔15次，于是我们将从32层(16+15+1)再扔。原因是如果它在32层破裂我们能尝试其下所有楼层从17到31最坏扔第二个蛋14次（总共能扔16次了）。如果32层并没破，我们还剩下能扔13次，依此类推得：
+
+1 + 15 16 如果它在16层破裂，从1到15层最坏扔15次第二个蛋
+
+1 + 14 31 如果它在31层破裂，从17到30层最坏扔14次第二个蛋
+
+1 + 13 45.....
+
+1 + 12 58
+
+1 + 11 70
+
+1 + 10 81
+
+1 + 9  91
+
+1 + 8  100 在最后我们能轻易地做到因为我们有足够多扔的次数来完成任务
+
+从上表我们能看到最佳的一个在最后一步将需要0次线性搜索。
+
+能把上述规律写为: (1+p) + (1+(p-1))+ (1+(p-2)) + .........+ (1+0) >= 100.
+
+令1+p=q上述式子变为q(q+1)/2>=100,对100解答得到q=14。
+
+扔第一个蛋从层14，27，39，50，60，69，77，84，90，95，99，100直到它破裂，再开始扔第二个蛋。最坏情况只需14次。
+
+## T48:4. Given a byte array, which is an encoding of characters. Here is the rule: 
++ a. If the first bit of a byte is 0, that byte stands for a one-byte character;
++ b. If the first bit of a byte is 1, that byte and its following byte together stand for a two-byte character.
+Now implement a function to decide if the last character is a one-byte character or a two-byte character.
+Constraint: You must scan the byte array from the end to the start.
+
+### 分析: We need to check the previous bytes which are started with 1 continuously to decide the last byte.
+#### we count the continuous bytes started with 1 from the 2-nd byte from the end. 
++ if the count is odd, the last byte is one-byte character.
++ if the count is even, the last byte is two-byte character.
+
+代码为：
+
+```
+void decide(vector<uchar> &A)
+{
+    const int n = A.size();
+    if( n < 2)
+    {
+        cout << "One-byte character..." << endl;
+        return;
+    }
+    int cnt = 0; //count the continuous bytes started with 1 from the 2-nd byte from the end.
+    for(int j=n-2;j>=0;--j)
+    {
+        if(A[j] & 0x80) cnt += 1;
+        else break;
+    }
+    if(cnt && cnt % 2)
+        cout << "two-byte character..." << endl;
+    else
+        cout << "one-byte character..." << endl;
+}
+```
+## T49：数组排序 
+### 给定一个数组，数组中有n个元素。数组有这样一个特性：每个数的位置索引与排序后该数的位置索引小于k（k<<n）。请问有没有时间复杂度低于nlogn的算法来对这个数组进行排序。
+### 
+考虑排序后的数组的第一个元素可能是原数组的[0,k-1]范围内的元素；第二个元素是原数组中的[0...k]范围内的元素；第三个元素是原数组中的[0...k+1],以此类推，可以一个大小为k的最小堆来得到一个有序的元素集合。
+
+代码为： //时间复杂度为 O(nlogk)
+
+```
+void sorted(vector<int> &A, int k)
+{
+    const int n = A.size();
+    if(k <= 0 || k > n || n < 2)
+    {
+       // cout <<  "Input k is illegal..." << endl;
+        return;
+    }
+    priority_queue<int,vector<int>, greater<int> > pq;
+    for(int i=0;k<k;++i) pq.push(A[i]);
+    for(int i=k;i<n;++i)
+    {
+        A[0] = pq.top();pq.pop();
+        pq.push(A[i]);
+    }
+    int i=0;
+    while(!pq.empty()) { A[n-k-i] = pq.top();pq.pop();}
+    return ;
+}
+```
+
+
+
+
+
+## T50:Given a list of words, find two strings S & T such that:
+    a. S & T have no common character
+    b. S.length() * T.length() is maximized
+Follow up: how to optimize and speed up your algorithm.
+
+
+
+### Analysis:
+
+## T51 : n位数字
+### 给定数字n，请给出方法，打印出所有的位数是n的数字，并且每一个数字，每一位从左到右依次变大。例如：n=3时(123,124,125...789).
+#### 这里的算法比较简单，只需要一次输出就可以了。
+代码为：
+```
+void helper(int cur_digit, int cur_cnt, const int max_cnt, string &cur)
+{
+        if(cur_cnt == max_cnt)
+        {
+            cout << cur << endl;
+            return;
+        }
+    cur.push_back('0' + cur_digit);
+    helper(cur_digit+1,cur_cnt+1,max_cnt,cur);
+    cur.pop_back();
+}
+
+void print(const int n)
+{
+    if(n <= 0 ) return;
+    string cur;
+    //the first digit
+    for(int i=1;i<=10-n;++i)
+        helper(i,0,n,cur);
+}
+```
+
+## T52:子矩阵的GCD
+### 给定n*n的矩阵，我们需要查询任意子矩阵中所有数字的GCD，请给出一种设计思路，对矩阵进行预处理，加速查询。额外的空间需要在O(n^2)内，预处理的时间复杂度，要尽可能的小。
+
+
+
+## T53: 
+### An array : 1 3 0 2 4 9
+### input: dest-node: A0
+### output: all the source nodes: (A1, A3, A4)
+Each element in this array means the steps it can take. Each element can go left or right. So A[1] and A[4] can reach A[0]. A[1] can reach A[4], A[4] can reach A[0], so A[1] can reach A[0].
+Output the index of element which can reach A[0]. 
+#### 这里的reach是说刚刚好使用A[i]步。
