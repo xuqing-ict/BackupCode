@@ -1660,4 +1660,67 @@ vector<int> compute(const vector<int> &A)
 }
 
 ```
-## T43:
+## T43: 只使用加法实现减法，乘法和除法。
+代码为：
+
+```
+//implement the subtraction, multiplication, division with only add.
+
+/*
+ * implement subtraction
+ */
+
+//negative a
+int negative(int a)
+{
+    int neg=0;
+    int d=(a>0)?-1:1;
+    while(a)
+    {
+        neg += d;
+        a += d;
+    }
+    return neg;
+}
+
+int sub(int a, int b)
+{
+    int negb = negative(b);
+    return a + negb;
+}
+
+
+//implement multiplication
+
+int multiply(int a, int b)
+{
+    if( a < b ) return multiply(b,a); //multiplicand > multiplyer is much faster as the times of add operation called is less.
+    int sum = 0;
+    for(int i=abs(b);i>0;--i)
+    {
+        sum += a;
+    }
+    if(b < 0) sum = negative(sum);
+    return sum;
+}
+
+//implement division
+int divide(int a, int b)
+{
+    if(b == 0 ) throw runtime_error("divisor is zero...\n");
+    int absa=abs(a),absb=abs(b);
+    int sum=0;
+    int ret=0;
+    while(sum + absb <= absa)
+    {
+        ret += 1;
+        sum += absb;
+    }
+    if((a < 0 && b < 0) || (a>0 && b>0))
+        return ret;
+    return negative(ret);
+}
+
+```
+
+## T44: 

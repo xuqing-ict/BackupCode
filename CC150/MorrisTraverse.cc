@@ -109,6 +109,7 @@ void posOrderTraverse(TreeNode *root)
 
   while(root)
   {
+      //left has visited
     if(root->left==nullptr)
     {
       root=root->right;
