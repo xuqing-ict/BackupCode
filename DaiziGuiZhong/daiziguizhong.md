@@ -6,7 +6,6 @@ Excerpt:
 
 待字闺中全部题解
 ## T1 : 旋转数组的最小值
-代码：
 
 ```
 int minVal(int A[], int n)
@@ -26,8 +25,10 @@ int minVal(int A[], int n)
     return A[mid];
 }
 ```
+
 ## T2：子数组的最大乘积
-代码为：
+
+
 ```
 int maxProduct(int A[], int n) {
     int global = INT_MIN;
@@ -43,10 +44,11 @@ int maxProduct(int A[], int n) {
     }
     return global;
 }
-};
 ```
+
 ## T3 ：最长01子串
 ### 给定一个数组，数组中只包含0和1。请找到一个最长的子序列，其中0和1的数量是相同的
+
 ```
 string longest01(const string &s)
 {
@@ -92,8 +94,6 @@ string longest01(const string &s)
 
 ## T4 ：最小区间
 ### k个有序的数组，找到最小的区间范围使得这k个数组中，每个数组至少有一个数字在这个区间范围内
-
-代码为：
 
 ```
 struct node //node 自己定义，不建议用pair！！！
@@ -151,9 +151,11 @@ P minInteval(const vector<vector<int> > &A)
     return P(l,r);
 }
 ```
+
 ## T5 ： Magic Index  & 寻找特殊数字
 1.  分析：没有重复元素时，与二分搜索代码完全一致
 2.  有重复元素时。需要递归求解左右两个部分。但是边界部分是可以缩小的。
+
 
 ```
 //不含有重复元素，就是简单的二分搜索
@@ -202,11 +204,12 @@ int magicIndexWithRepeat(const vector<int> &A)
     return binary_search(A,0,n-1);
 }
 ```
+
 ## T6：数字游戏
 ### 盒子中有n张卡片，上面的数字分别为k1,k2,...,kn。你有4次机会，每抽一次，记录下卡片上的数字，再将卡片放回盒子中。如果4个数字的和等于 m。则你就赢得游戏，否则就是输。直觉上，赢的可能性太低了。请你给出程序，判断是否有赢的可能性。尽量提高方法的效率。
 ####　最坏时间复杂度　O(n^4)  == > O(n^3logn) ==>O(n^2logn)
 
-代码为：
+
 ```
 bool bi_search(const vector<int> &A,const int target)
 {
@@ -258,7 +261,7 @@ f(5) => 24略微复杂一点，但是也不在话下。这样我们的结论已�
 1.  如果栈为空，那么说明此时的已有的子树应该全部是A[k+1]的左子树，并且**更新root节点**即可。
 2. 如果此时的栈顶是大于A[k+1]的，那么说此时栈顶节点的右子树要退化为A[k+1]节点的左子树（因为访问的先后关系），那么更新A[k+1]的左子树，并且把以A[k+1]为根的子树作为栈顶元素的右子树。**
 
-代码为：
+
 ```
 TreeNode* buildMaxHeap(const vector<int> &A)
 {
@@ -295,6 +298,7 @@ TreeNode* buildMaxHeap(const vector<int> &A)
     return root;
 }
 ```
+
 ## T9：统计数组
 ### 给定数组A，大小为n，数组元素为1到n的数字，不过有的数字出现了多次，有的数字没有出现。请给出算法和程序，统计哪些数字没有出现，哪些数字出现了多少次。能够在O(n)的时间复杂度，O(1)的空间复杂度要求下完成么？
 
@@ -310,8 +314,6 @@ TreeNode* buildMaxHeap(const vector<int> &A)
 1. A[A[i]%n] += n;
 2. A[i] = A[i] / n;
 
-
-代码为:
 
 ```
 //重点解析一下这个代码：我们需要关注的问题是 ：
@@ -355,8 +357,6 @@ void count2(vector<int> &A)
 ### 给定两个字符串A和B，判断A中是否包含由B中字符重新排列成的新字符串。例如：A=abcdef, B=ba，结果应该返回true。因为ba的排列ab，是A的子串。
 #### 依次检查字符串A的所有的长度为Len(B)的子串，然后比较排序两者是否是变位词即可。
 
-        代码为：
-
 ```
         bool occur(string s, string t)
         {
@@ -380,7 +380,7 @@ void count2(vector<int> &A)
 ## T11 ：树的高度
 ### 有一个棵树，不一定是二叉树，有n个节点，编号为0到n-1。有一个数组A，数组的索引为0到n-1，数组的值A[i]表示节点i的父节点的id，根节点的父节点id为-1。给定数组A，求得树的高度。
 #### 树的问题，一般使用递归来求解，但是，存在着大量的重复运算，那么很简单，用一个备忘录记录下已经计算了的节点的高度。
-        代码为：
+
 ```
         int helper(const vector<int> &A, const int idx, vector<int> &height)
         {
@@ -399,9 +399,10 @@ void count2(vector<int> &A)
         return height;
     }
 ```
+
 ## T12：123排序（荷兰国旗问题）
 ### 快速排序的partition的思想，注意循环不变式的定义即可。
-        代码为：
+
 ```
         void sort123(int *A, const int n)
         {
@@ -416,13 +417,13 @@ void count2(vector<int> &A)
             }
         }
 ```
+
 ## T13： 删除字符串
 ### 删除字符串中的“b”和“ac”，需要满足如下的条件：字符串只能遍历一次并且不能够使用额外的空间。
 #### 涉及到这些字符串处理的问题，其实都是状态机的问题，至于状态机，自己不熟。那就直接按照题目的要求来编写代码。
 #### 如果当前的字符是b，那么删除即可，如果当前的字符是'a',那么还要考虑下面的字符是不是c，如果是c，删除即可，如果不是，那么保留a，依次循环往复即可。
         //代码有BUG！！自己写的，下面贴的是对的
 
-        代码为：
 ```
         //删除'b' 和 "ac"
         void deleteChars_ans(char *s)
@@ -464,7 +465,7 @@ void count2(vector<int> &A)
 #### 也就是将每一个数质因子分解，然后求所有的质因子的最高次幂的乘积即可，例如：
         1 2 3 4 5 6  == 》 1   2  3   2^2， 5， 2*3 ==>那么分别提取这些质因子的最高次幂为： 2^2 * 3 * 5 = 60 .
 #### 同样需要注意的是溢出的问题。
-        代码为：
+
 ```
         int minMultiply(const int n)
         {
@@ -486,7 +487,7 @@ void count2(vector<int> &A)
 
 ## T15：最长回文
         直接上manacher算法吧，其他的算法见博客http://blog.csdn.net/xuqingict/article/details/39718893
-        代码为：
+
 ```
         string Manacher(const string &s)
         {
@@ -536,6 +537,7 @@ void count2(vector<int> &A)
 
 ## T16 : 丢失的数字
 ### 给定一个无序的整数数组，怎么找到第一个大于0，并且不在此数组的整数。比如[1,2,0] 返回 3, [3,4,-1,1] 返回 2。最好能O(1)空间和O(n)时间
+
 ```
         //A[i] 保存的是 （i+1）的值！！
         int firstMissingDigit(vector<int> &A) {
@@ -553,6 +555,7 @@ void count2(vector<int> &A)
             return n+1;
         }
 ```
+
 ## T17 : 给定字符串，输出括号是否匹配，例如，
 
         "()" yes；
@@ -560,7 +563,7 @@ void count2(vector<int> &A)
         "(abcd(e)" no；
         "(a)(b)" yes。
 ### 题目描述很简单，要求使用递归来写。不能出现循环语句。
-        代码为：
+
 ```
         bool valid(const string &s)
         {
@@ -604,8 +607,9 @@ void count2(vector<int> &A)
         return ret;
     }
 ```
+
 ## T18 : 对一个字符串按照回文进行分割，例如aba|b|bbabb|a|b|aba就是字符串ababbbabbababa的一个回文分割，每一个字串都是一个回文。请找到可以分割的最少的字串数
-### 代码为：
+
 ```
         int minCut(string s) {
             const int n = s.size();
@@ -633,9 +637,10 @@ void count2(vector<int> &A)
             return g[n];
         }
 ```
+
 ## T19 : 数字翻译
 ###  翻译数字串，类似于电话号码翻译：给一个数字串，比如12259，映射到字母数组，比如，1 -> a， 2-> b，... ， 12 -> l ，... 26-> z。那么，12259 -> lyi 或 abbei 或 lbei 或 abyi。输入一个数字串，判断是否能转换成字符串，如果能，则打印所以有可能的转换成的字符串。动手写写吧。
-        代码为：
+
 ```
         char dict[27];
 
@@ -758,6 +763,7 @@ void count2(vector<int> &A)
         return ret;
     }
 ```
+
 ## T20：糖果问题
 ### Description : N个孩子站成一排，每个人分给一个权重。按照如下的规则分配糖果：
         每个孩子至少有一个糖果
@@ -765,7 +771,6 @@ void count2(vector<int> &A)
         问题是，最少需要多少个糖果？
 ### 权重的分布一定是一个折线（直线是特殊的折线），那么波谷的孩子分得的糖果一定是1，他旁边比他高的依次加1即可。但是需要考虑到**来自左右两边的约束**。那么扫描数组两边，因为每一个孩子分得的糖果数是取决于他的左右两个孩子的。
 
-        代码为：
 ```
         int minCandy(const vector<int> &A)
         {
@@ -794,7 +799,7 @@ void count2(vector<int> &A)
 ## T21：分词问题
 ###    给定字符串，以及一个字典，判断字符串是否能够拆分为字段中的单词。例如，字段为{hello，world}，字符串为hellohelloworld，则可以拆分为hello,hello,world，都是字典中的单词
 #### DP求解即可。
-#### 代码为：
+
 ```
         bool dictPartition(const string &s,const unordered_set<string> &dict)
         {
@@ -813,11 +818,12 @@ void count2(vector<int> &A)
             return f[n];
         }
 ```
+
 ## T22：LIS 最大独立子集
 ###  含义如下：给定一棵二叉树，找到满足如下条件的最大节点集合：集合中的任意两个节点之间，都没有边。
 #### DP，跟最大娱乐值的那题很像。定义递推式： f[x] : 以x节点为根节点的子树的最大独立集（包含x）。 g[x]: 以x为根节点的子树的最大独立集（不包含x）.
 #### 注意题目中的最大独立集应该指的是独立集的元素的和，而不是个数，如果是个数的话，那么也是可以解的，每个节点的值是1就对了。
-        代码为：
+
 ```
         struct fg
         {
@@ -856,9 +862,10 @@ void count2(vector<int> &A)
         return ret;
     }
 ```
+
 ## T23：拷贝链表
         有一个链表，每一个节点除了next指针指向一下节点以外，又多出了一个指针random，指向链表中的任何一个节点，包括null。请给出方法完成链表的深拷贝。
-        代码为：
+
 ```
 
         ListNode *copyList(ListNode *head)
@@ -895,6 +902,7 @@ void count2(vector<int> &A)
             return dummy.next;
         }
 ```
+
 ## T24：城市的环形路有n个加油站，第i个加油站的油量用gas[i]来表示，你有如下的一辆车：
         它的油缸是无限量的，初始是空的
         它从第i个加油站到第i+1个加油站消耗油量为cost[i]
@@ -902,7 +910,7 @@ void count2(vector<int> &A)
 ### Observation：
 ####  如果说从某一个点i出发， 在点k处出现了油不足的情况，那么在［i，k］之间的所有的点都是不满足条件的。
 #### 如果说消耗的油的总量大于加油站的油的储量，那么很显然不存在这样的点；下面这句很重要，如果说油的储量大于油的消耗量，那么一定存在这样的点。（这句需要好好理解，可用反证法来证明）。
-        代码为：
+
 ```
         int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
             const int n = gas.size();
@@ -926,6 +934,7 @@ void count2(vector<int> &A)
 
 ## T25 : 最大乘积
 ### Description :  一根绳子，长度为n米。将其切成几段，每一段的长度都是整数。请给出一种切法，使得切成的各段绳子之间的乘积是最大的。注意，最少要切一下的。
+
 ```
         int maxCutLen(const int n)
         {
@@ -948,16 +957,12 @@ void count2(vector<int> &A)
 ###  输入数字组成的字符串，取k切分后的最大K乘积
 ### 例如： 如“123”切为2分，则两项最大乘积是12 * 3 = 36
 
-        代码为：
-
 ```
 
 ```
 
 ## T27: 最少插入字符
 ### 给定字符串，可以通过插入字符，使其变为回文。求最少插入字符的数量
-
-        代码为：
 
 ```
         int minInsert(const string &s)
@@ -988,8 +993,6 @@ void count2(vector<int> &A)
         两边同时取对数有： 对于式子:  **ylog(x)>xlog(y)，x和y都是正数，则进一步有：两边同时除以xy，则：log(x)/x >log(y)/y。** 这个式子，看起来也复杂，但是，x和y都在各自的一边，要简单的多。
 ### Algorithm：
         + 数组X与Y分别计算logx/x和logy/y。然后排序，再对于每一个x，在Y中进行二分查找，从而得到比该数字小的位置，然后输出即可
-
-        代码为：
 
 ```
         int numPair(const vector<int> &A, const vector<int> &B)
@@ -1093,7 +1096,6 @@ void count2(vector<int> &A)
         + m<=x<n*x
 #### 这种题目一般都是产生式模型，其实也就是时间换空间的做法。
 
-        代码为：
 
 ```
         void helper(const int n, const int m, int cur_index, int sum, vector<int> &cnt)
@@ -1161,8 +1163,6 @@ void count2(vector<int> &A)
 
 #### 本问题是矩阵的原地reverse的问题。矩阵的size为 2 * n。
 
-        思路：
-
 ```
         void shuffle(char *A, const int R, const int C)
         {
@@ -1199,8 +1199,6 @@ void count2(vector<int> &A)
 
 #### 更加巧妙一点的方法，那就是将数组中的3个元素分别看作质数2，3，5，...，并将这个质数乘起来，那么积的结果的2，3，5，。。。的因子的个数，依次填入之前的数字即可了。
 
-        代码为：
-
 ```
         void sort123(int *A, const int n)
         {
@@ -1222,6 +1220,7 @@ void count2(vector<int> &A)
             }
         }
 ```
+
 ## T34 : 数组波谷
 ### 一个数组A[1...n]，满足A[1]>=A[2], A[n] >= A[n-1]。A[i]被成为波谷，意味着：A[i-1] >= A[i] <= A[i+1]。请给出一个算法，找到数组中的一个波谷。O(n)的方法，是很直接，有更快的方法么？
 
@@ -1232,7 +1231,7 @@ void count2(vector<int> &A)
     + if A[mid-1] >= A[mid] >= A[mid-1] ，那么在右边肯定存在一个波谷，二分查找又半边即可。
         + if A[mid-1] <= A[mid] >= A[mid+1]，任选一边即可。
         ＋if A[mid-1] <= A[mid] <= A[mid+1]，那么在左边一定存在波谷，二分查找左半边即可。
-        代码为：
+
 
 ```
         int minValue(const vector<int> &A)
@@ -1305,7 +1304,6 @@ void count2(vector<int> &A)
         最后的取值范围，还可以是其他的么？我们已经知道正常的色子，哪一面出现的概率都是1/6；能不能充分利用这个呢？只需要空白的色子，六面都是一个数字就可以了。p = 1/6 * 1 最终每个数字出现的概率都是1/6。
 
 ## T37 : 给定一个数组，我们可以找到两个不相交的、并且是连续的子数组A和B，A中的数字和为sum(A), B中的元素和为sum(B)。找到这样的A和B，满足sum(A) - sum(B)的绝对值是最大的。例如：[2, -1 -2, 1, -4, 2, 8]划分为A=[-1, -2, 1, -4], B=[2, 8]， 最大的值为16
-        代码为：
 
 ```
 
@@ -1362,6 +1360,7 @@ void count2(vector<int> &A)
         return ret;
     }
 ```
+
 ##  T38 : 大家都知道facebook用户都是双向的好友，a是b的好友，那么b一定是a的好友，现在给定一个用户列表，其中有些用户是好友，有些不是，请判断，这些用户是否可以划分为两组，并且每组内的用户，互相都不是好友。如果能，请给出这个划分。
 
         + 例子1： 用户：{1, 2, 3} 好友关系：1-2， 2-3 划分：{1,3} {2} 
@@ -1430,7 +1429,6 @@ void count2(vector<int> &A)
 
         上面的算法，排序处理自左向右第一位，然后处理第二位，一次类推，如果某一组内，即第一个数字相同的一组，长度不同时，采用第一位进行补位。
 
-        代码为：
 ```
         /compare lhsrhs rhslhs
         bool cmp(int lhs, int rhs)
@@ -1493,7 +1491,7 @@ void count2(vector<int> &A)
 ## T40 : Morris 遍历
 ### 先序，中序，后序的Morris遍历的实现：
 #### 先序：
-代码为：
+
 
 ```
   vector<int> preorderTraversal(TreeNode *root) {
@@ -1556,6 +1554,7 @@ void count2(vector<int> &A)
         return ret;
     }
 ```
+
 #### 后序： （后序的版本比较复杂，添加了附加节点。）
 
 ```
@@ -1636,7 +1635,7 @@ public:
 
 ## T42: 忘我之乘积
 ### 给你一个数组A[1..n]，请你在O(n)的时间里构造一个新的数组B[1..n]，使得B[i]=A[1]A[2]...*A[n]/A[i]。你不能使用除法运算。
-代码为：
+
 
 ```
 vector<int> compute(const vector<int> &A)
@@ -1661,7 +1660,7 @@ vector<int> compute(const vector<int> &A)
 
 ```
 ## T43: 只使用加法实现减法，乘法和除法。
-代码为：
+
 
 ```
 //implement the subtraction, multiplication, division with only add.
@@ -1777,7 +1776,7 @@ int divide(int a, int b)
 ### 给一个整数数组， 找到其中包含最多连续数的子集，比如给：15, 7, 12, 6, 14, 13, 9, 11，则返回: 5:[11, 12, 13, 14, 15]， 最简单的方法是sort然后scan一遍，但是要o(nlgn). 有什么O(n)的方法吗？
 #### Leetcode上的Longest Consecutive Sequence，建立hash表，分别记录每个元素的左边界和右边界，然后取最大的即可。
 
-代码为：
+
 ```
     int longestConsecutive(vector<int> &num) {
         const int n = num.size();
@@ -1807,13 +1806,14 @@ int divide(int a, int b)
         return ret;
     }
 ```
+
 ## T46：单链表之和
 ### 两个单链表（singly linked list），每一个节点里面一个0-9的数字，输入就相当于两个大数了。然后返回这两个数的和（一个新list）。这两个输入的list长度相等。
 ### 要求是：
 + 1. 不用递归。
 + 2. 要求算法在最好的情况下，只遍历两个list一次 ，最差的情况下两遍。
 #### 首先题意要清楚，链表等长，于是不用再paddle了。再次如果该链表是从低位到高位，那么很简单，直接遍历一遍即可，并且最终的进位在数组的末尾；如果链表的顺序是从高位到低位的话，那么也就是说我们需要递归的来进行。
-代码为：
+
 ```
 //head1 and head2 have same length.
 int len(ListNode *head)
@@ -1853,6 +1853,7 @@ ListNode *addList(ListNode *head1, ListNode *head2)
     return ret;
 }
 ```
+
 ## T47：在C中你如何调整比特来找出一个机器内存内的堆栈向上或向下增长？
 ### 定义两个函数，一个函数内部定义一个局部变量，并且调用另外的一个函数，在那个函数中同样定义一个局部变量，查看这两个局部变量的地址大小即可。
 
@@ -1888,6 +1889,8 @@ A3：可能的原因可能是一个未初始化的指针/变量被用。
 
 ### Q：这是一个代码片段，如何使得该代码抛出ArrayIndexOutOfBounds异常？ 
 #### 改代码本身是没有问题的，这个时候就需要考虑多线程的影响。
+
+```
 private static String[] list = null;
 
 public static String[] getArray(size) {
@@ -1897,10 +1900,13 @@ public static String[] getArray(size) {
 	}
 	return list;
 }
+```
+
 A：如果两个线程并行执行还用值10和7调用这个方法，第一个线程将创建10维数组，然后第二个线程将重新初始化7维同样的静态数组，接着第一个线程将运行这个数组从0到9还放值在里面，然而数组维数现在是7于是在list[7]它将抛出该异常。
 
  ### Q：写一函数f(a,b)，它带有两个字符串参数并返回一串字符，该字符串只包含在两个串中都有的并按照在a中的顺序。写一个版本算法复杂度O(N^2)和一个O(N)
 
+```
 A：private static String match(String a, String b) {
 
 String result = "";
@@ -1925,7 +1931,7 @@ result=result+a.charAt(i);
 return result;
 
 }
-
+```
  
 
 ### Q (Count and say ... ):
@@ -1993,7 +1999,7 @@ Constraint: You must scan the byte array from the end to the start.
 + if the count is odd, the last byte is one-byte character.
 + if the count is even, the last byte is two-byte character.
 
-代码为：
+
 
 ```
 void decide(vector<uchar> &A)
@@ -2016,12 +2022,13 @@ void decide(vector<uchar> &A)
         cout << "one-byte character..." << endl;
 }
 ```
+
 ## T49：数组排序 
 ### 给定一个数组，数组中有n个元素。数组有这样一个特性：每个数的位置索引与排序后该数的位置索引小于k（k<<n）。请问有没有时间复杂度低于nlogn的算法来对这个数组进行排序。
 ### 
 考虑排序后的数组的第一个元素可能是原数组的[0,k-1]范围内的元素；第二个元素是原数组中的[0...k]范围内的元素；第三个元素是原数组中的[0...k+1],以此类推，可以一个大小为k的最小堆来得到一个有序的元素集合。
 
-代码为： //时间复杂度为 O(nlogk)
+ //时间复杂度为 O(nlogk)
 
 ```
 void sorted(vector<int> &A, int k)
@@ -2061,7 +2068,7 @@ Follow up: how to optimize and speed up your algorithm.
 ## T51 : n位数字
 ### 给定数字n，请给出方法，打印出所有的位数是n的数字，并且每一个数字，每一位从左到右依次变大。例如：n=3时(123,124,125...789).
 #### 这里的算法比较简单，只需要一次输出就可以了。
-代码为：
+
 ```
 void helper(int cur_digit, int cur_cnt, const int max_cnt, string &cur)
 {
@@ -2087,6 +2094,7 @@ void print(const int n)
 
 ## T52:子矩阵的GCD
 ### 给定n*n的矩阵，我们需要查询任意子矩阵中所有数字的GCD，请给出一种设计思路，对矩阵进行预处理，加速查询。额外的空间需要在O(n^2)内，预处理的时间复杂度，要尽可能的小。
+#### 分析：之前遇到的题目是查询一个矩阵中的某个子矩阵的和，通过计算一个辅助的矩阵Sum[i][j]等于矩阵中(0,0)到(i,j)的所有元素的和。
 
 
 
@@ -2097,3 +2105,4 @@ void print(const int n)
 Each element in this array means the steps it can take. Each element can go left or right. So A[1] and A[4] can reach A[0]. A[1] can reach A[4], A[4] can reach A[0], so A[1] can reach A[0].
 Output the index of element which can reach A[0]. 
 #### 这里的reach是说刚刚好使用A[i]步。
+
