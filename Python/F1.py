@@ -37,3 +37,11 @@ sys.stdout.write(s1 + "\n")
 sys.stdout.write(s2)
 sys.stdout.write(s3)
 sys.stdout.write(s4)
+
+def addend(L=[]):
+    L.append('END')
+    return L
+
+a = [1,2,3,4]
+a.addend()
+print a
