@@ -1,0 +1,25 @@
+python的一些常见命令备忘
+
+字符转换为ASC码： ord(‘A’) — 65
+ASC码转换为字符： chr(65) — ‘A’
+
+unicode字符串，在字符串前面加上u，例如： u’中文’ — 中文 
+                                   u‘中’ — u'\u4e2d'
+
+将unicode u’XXX’ 转换为utf-8 ‘XXX’ 的编码： u’ABC’.encode(‘utf-8’) — ‘ABC’ , u’中文’.encode(‘utf-8’) — '\xe4\xb8\xad\xe6\x96\x87'
+英文字符将unicode字符转换为utf-8之后的字符串一样，但是占用的存储空间不同。中文字符转换为utf-8之后。就只一堆二进制数。
+
+将utf-8转换为unicode字符，decode
+‘ABC’.decode(‘utf-8’) — u’ABC’
+‘\xe4\xb8\xad\xe6\x96\x87’.decode(‘utf-8’) — 中文
+因此，在python源代码中，如果含有中文的话，那么我们需要按照utf-8来读该文本文件，否则就会出现乱码。
+因此在源代码的头两行加上:
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+list的函数：
+append 
+pop(i) :删除第i个元素，i可以是负数
+pop() : 删除最后的元素
+
+tuple是不可变的，但是tuple内部的list的元素是可变的。

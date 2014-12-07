@@ -1,115 +1,73 @@
-/*
-Given:
-start = "hit"
-end = "cog"
-dict = ["hot","dot","dog","lot","log"]
-Return
-[
-["hit","hot","dot","dog","cog"],
-["hit","hot","lot","log","cog"]
-]
-*/
-
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
 #include <iterator>
-#include <string>
-#include <map>
-#include <set>
+#include <limits.h>
 #include <unordered_set>
 using namespace std;
 
-//从word开始到start的所有路径
-void buildPaths(map<string, vector<string> > & parent, string start , string word, vector<string> &curPath , vector<vector<string> > & ret)
+char alphabet[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+
+void helper(string start, const string &end, unordered_set<string> &dict,int curStep, int &minStep, int curPos)
 {
-	curPath.push_back(word);
-	if(word == start)
-	{
-		ret.push_back(curPath);
-		return;
-	}
+    if(minStep < curStep)
+    {
+        cout << "xq2" << endl;
+        return;
+    }
+    if(start == end)
+    {
+        cout << "xq" << endl;
+        if(curStep < minStep)
+        {
+            minStep = curStep;
+        }
+        return;
+    }
 
-	for(map<string, vector<string> >::iterator it = parent[word].begin() ; it != parent[word].end(); ++it)
-	{
-		buildPaths(parent, start, *it, curPath, ret);
-	}
-	curPath.pop_back();
-			
+    for(int j = 0 ; j < 26; ++j)
+    {
+        for(int i = 0 ; i < end.size() && 1 != curPos ; ++i)
+        {
+            string temp = start;
+            temp[i] = alphabet[j];
+            if(dict.find(temp) != dict.end())
+            {
+                cout << temp << " in dict..." << endl;
+                curPos = i;
+                helper(temp, end, dict, curStep+1, minStep, curPos);
+            }
+            else
+            {
 
+            }
+        }
+    }
 }
 
-vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict)
+int ladderLength(string start, string end, unordered_set<string> &dict)
 {
-	vector<vector<string > > ret;
-	unordered_set<string> prev, next;
-
-	unordered_set<string> visited;
-	map<string, vector<string> > parent;
-
-
-	prev.insert(start);
-
-	string curWord , tempWord;
-	
-	bool found = false;
-
-	while(!prev.empty())
-	{
-		for(unordered_set<string>::iterator it = prev.begin() ; it != prev.end(); ++it)
-		{
-			curWord = *it;
-			visited[curWord] = true;
-
-			for(int i = 0 ; i < curWord.size() ; ++i)
-			{
-				tempWord = curWord;
-				for(char c = 'a'; c <= 'z'; ++c)
-				{
-					if(curWord[i] == c)
-					{
-						continue;
-					}
-					tempWord[i] = c;
-					if (tempWord == end)
-					{
-						found = true;
-					}
-					if (visited[tempWord] == 0  && (dict.count(tempWord) != 0 || tempWord == end))
-					{
-						visited.insert(tempWord);
-						parent[tempWord].append(curWord);
-					}
-					tempWord = curWord;
-				}
-			}
-		}
-		if(found)
-		{
-			vector<string> curPath;
-			buildPaths(parent, start,end, curPath, ret);
-			return ret;
-		}
-		prev.clear(); //!!!
-		swap(prev,next);
-	}
-	return ret;
+    if(dict.size()  == 0  || start ==  end)
+    {
+        return 0;
+    }
+    int curStep = 0;
+    int minStep = INT_MAX;
+    helper(start, end, dict, curStep, minStep,-1);
+    return minStep;
 }
-
-
 int main()
 {
-	string	start = "hit"
-	string end = "cog"
-	unordered_set<string> dict;
-	dict.insert("hot");
-	dict.insert("dog");
-	dict.insert("dot");
-	dict.insert("lot");
-	dict.insert("log");
-	vector<vector<string > > ret = wordLadder(start,end,dict);
-	return 0;
+    unordered_set<string> dict;
+   // "hot","dot","dog","lot","log"
+    dict.insert("hot");
+    dict.insert("dot");
+    dict.insert("dog");
+    dict.insert("lot");
+    dict.insert("log");
+    string start = "hit";
+    string end = "cog";
+
+    cout << ladderLength(start,end ,dict) << endl;
+    return 0;
 }
-
-
-
-
