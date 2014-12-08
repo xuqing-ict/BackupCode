@@ -293,11 +293,12 @@ def log(text):
     return decorator
 
 #it means we called log(date) instead of calling date() when we call date() only.
-@log 
+@log("print today...") 
 def date():
     print "2014-11-5"
-
+f = date
 date()
+f()
 
 
 @log("decorator need parameter version") #it means we called log(date) instead of calling date() when we call date() only.
@@ -319,6 +320,12 @@ def log(func):
         print "call %s : " %func.__name__
         return func(*args, **kw)
     return wrapper
+@log
+def func():
+    print "full implementation..."
+func()
+
+
 
 # a complete decorator version 1: log has no parameter
 import functools
@@ -337,12 +344,6 @@ def func():
     print "full implementation..."
 func()
 
-@log
-def func():
-    print "full implementation..."
-func()
-
-
 #The decorator design pattern in Python can be implemented by function or class
 
 #define a log supporting the parameter is void or non-void
@@ -358,3 +359,53 @@ def log(*args):
 
 
 
+import functools
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            print "%s %s()" %(text, func.__name__)
+            return func(*args, **kw)
+        return wrapper
+    return decorator
+
+def log2(func):
+    def decorator(*args, **kw):
+        return func(*args, **kw)
+    return decorator
+
+@log("decorator need parameter version1") 
+@log("decorator need parameter version2") 
+def date2(x,y):
+    print "2014-11-5"
+    print "x, y ", x, y
+    return x
+
+
+date2 = log('execute1')(date2)
+date2 = log('execute2')(date2)
+date2 = log('execute3')(date2)
+date2(2, 3)
+
+
+
+#partial
+print int("12345")
+#define a partial function by decide some parameters from right to left
+import functools
+int2 = functools.partial(int,base=2)
+print int2("100",base=10)
+print int2("100")
+
+def f(a1=1,a2=2,a3=3):
+    print 'In f : ' , a1, a2, a3
+
+def g(a1,a2,a3):
+    print "In g : ", a1, a2, a3
+f(2,3,4) # 2 3 4
+f2 = functools.partial(f,a1=22,a3=33)
+f2()
+
+g(11,22,33)
+g2 = functools.partial(g,a2=111, a3=333)
+g2(111)
