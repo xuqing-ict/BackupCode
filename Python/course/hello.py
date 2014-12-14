@@ -30,11 +30,19 @@ Hello = type('Hello',(object,),dict(hello=fn))
 h = Hello()
 
 
+#Metaclass -- > class --> instance
+class ListMetaClass(type):
+    def __new__(cls,name,bases,attrs):
+        attrs['add'] = lambda self, value:self.append(value)
+        return type.__new__(cls,name,bases,attrs)
+class MyList(list):
+    __metaclass__ = ListMetaClass
+L = MyList()
+L.add(1)
+print L
 
 
-
-
-
+'''
 #private function
 def __my_name():
     return "Qing"
@@ -56,4 +64,4 @@ if __name__ == '__main__':
 _a = 100
 __a = 1000
 a = 10
-
+'''
