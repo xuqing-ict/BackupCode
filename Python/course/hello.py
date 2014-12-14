@@ -16,6 +16,25 @@ except ImportError:   #catch a ImportError exception
     import StringIO
 
 
+class Hello(object):
+    def hello(self,name = 'world'):
+        print 'Hello, %s' %name
+
+#define class using type is the same with the definition above
+
+def fn(self,name = "world"):
+    print "Hello, %s" %name
+
+#define class (class name, base class list(tuple), functions)
+Hello = type('Hello',(object,),dict(hello=fn))
+h = Hello()
+
+
+
+
+
+
+
 #private function
 def __my_name():
     return "Qing"

@@ -5,7 +5,6 @@
 #### 下面一步一步地介绍。
 
 + 定义类Student，拥有变量名name和score
-
 ```
 class Student(object):
     def __init__(self,name,score):
@@ -14,7 +13,6 @@ class Student(object):
 ```
 
 #### 这样，我们可以在类外修改Student的实例的成员变量:
-
 ```
 s1 = Student()
 s1.name = "Lily"
@@ -25,7 +23,6 @@ s1.score = 9999 # 这里的定义是不合理的
 
 
 #### 我们可以定义相应的set和get成员函数来访问成员变量score，并且进行参数检查。如下所示：
-
 ```
 class Student(object):
     def __init__(self,name,score):
@@ -43,7 +40,6 @@ class Student(object):
 #### 上述代码定义了score成员的set和get函数。（可能实际应用时，修改分数比较常见）
 
 #### 现在，我们改变参数的代码是这样的：
-
 ```
 s1 = Student()
 s1.set_score(9999) #这里会抛出异常
@@ -56,7 +52,6 @@ s1.set_score(9999) #这里会抛出异常
 #### 下面，我们讨论Python的高级特性 @Property。简单的说**@Properyty就是将成员函数的调用变成属性赋值**。
 
 #### 于是有了下面的代码：
-
 ```
 class Student(object):
     def __init__(self,name,score):
@@ -77,7 +72,6 @@ s1 = Student("Lily", 90)
 #s1.name = "Luly"
 s1.score = 100
 ```
-
 #### 关于上述代码的说明：
 + 可能你已经发现了，我的成员变量改成了_name 与 _score，这里首先是为了增加可读性，这两个变量是私有的。其次的原因见下面的误区分析。
 + 上述代码中的 s1.name = "Luly" 行会出现编译错误 * AttributeError: can't set attribute * ,也就是说这里不能直接这样改变，这是为什么呢？可以看到，在代码中，我并没有提供名称为name的set函数，
@@ -87,7 +81,6 @@ s1.score = 100
 + 关于@score.setter 便是针对与 score函数包裹的成员变量的的set函数。当我们需要修改_score的值时，使用score函数，但是就像score是类的成员属性一样使用，例如上面的： s1.score = 100，实际上等价于 s1.score(100).
 
 #### **注意，这里的函数名不一定要是score，可以是任何的字符串，这里只是为了方面说score函数是_score的包裹**，例如下面的代码：我们将score改成了AA，但是这样在:
-
 ```
 class Student(object):
     def __init__(self,name,score):
@@ -108,10 +101,10 @@ s1 = Student("Lily", 90)
 #s1.name = "Luly"
 s1.AA = 100 # 这里相当于是 s1.AA(100)
 ```
+#### 好了，关于@Property的概念与用法就讲完了。本质上是定义了新的函数，该函数们执行set与get的功能，并且有@Property的包裹。并且将这些定义的函数当作属性一样来赋值。
 
-### 好了，关于@Property的概念与用法就讲完了。本质上是定义了新的函数，该函数们执行set与get的功能，并且有@Property的包裹。并且将这些定义的函数当作属性一样来赋值。
+### 可能存在的陷阱：
 
-#### 可能存在的陷阱：
 #### 下面的代码是个大的陷阱，因为现在的函数已经不再是单纯的函数，而是可以直接用 = 来调用，例如上面的 score函数 的调用竟然是  s1.score = 100 .这样就会出现下面的问题：
 ```
 class Student(object):
