@@ -2,6 +2,16 @@
 
 import sys
 
+a = []
+a.append([1,2,3,4,5])
+print a
+for kmer in a:
+    j = len(kmer)-1
+    while j > 0: 
+        kmer[j] = kmer[j]-kmer[j-1]
+        j -= 1
+print a
+
 def addend(L=[]):
     L.append('END')
     return L
